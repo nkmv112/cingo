@@ -9,18 +9,18 @@ RUN apt-get update && \
 # Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package*.json ./
+# Copy package files from the backend directory and install dependencies
+COPY backend/package*.json ./
 RUN npm install --production
 
-# Copy the rest of the application code
-COPY . .
+# Copy the backend source code
+COPY backend/ .
 
-# Create temp directory for compilation
+# Create temp directory for compilation with proper permissions
 RUN mkdir -p temp && chmod 777 temp
 
-# Expose the port the app runs on
+# Expose the port (Railway uses PORT env var, but we document 3001)
 EXPOSE 3001
 
-# Command to run the application
+# Command to run the backend
 CMD ["node", "server.js"]
