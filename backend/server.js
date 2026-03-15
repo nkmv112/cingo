@@ -33,6 +33,7 @@ app.get('/', (req, res) => {
 // AI Tutor Endpoint
 app.post('/tutor', async (req, res) => {
     const { message, history } = req.body;
+    console.log(`[AI Request] Key length: ${process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.length : 'MISSING'}`);
     
     if (!process.env.GEMINI_API_KEY) {
         return res.json({ 
