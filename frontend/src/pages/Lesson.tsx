@@ -143,18 +143,67 @@ const Lesson = () => {
       };
     }
 
-    // Fallback for others (Variables)
+    // Lesson 103: Variables & Constants
+    if (idNum === 103) {
+      return {
+        title: "Variables & Constants",
+        slides: [
+          {
+            id: 1,
+            title: "Constants in C",
+            content: (
+              <>
+                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
+                  A <strong>constant</strong> is a value that cannot be changed during program execution. We use the <code>const</code> keyword.
+                </p>
+                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
+                  Example: <code>const float PI = 3.14;</code>
+                </p>
+              </>
+            )
+          }
+        ] as Slide[],
+        questions: [
+          { id: 1, text: "Which keyword makes a variable unchangeable?", options: ["static", "const", "final", "fixed"], correctIndex: 1 }
+        ] as Question[]
+      };
+    }
+
+    // Lesson 104: I/O (printf & scanf)
+    if (idNum === 104) {
+      return {
+        title: "I/O: printf & scanf",
+        slides: [
+          {
+            id: 1,
+            title: "Input with scanf",
+            hasCodeEditor: true,
+            initialCode: `#include <stdio.h>\n\nint main() {\n    int num;\n    printf("Enter a number: ");\n    // scanf needs & before the variable name\n    // In this web demo, we mimic output; scanf might wait forever!\n    num = 42; \n    printf("You entered: %d\\n", num);\n    return 0;\n}`,
+            content: (
+              <p style={{ fontSize: '1.2rem', lineHeight: 1.8 }}>
+                To get input from a user, we use <code>scanf</code>. It uses the same format specifiers as <code>printf</code>!
+              </p>
+            )
+          }
+        ] as Slide[],
+        questions: [
+          { id: 1, text: "Which function is used for input in C?", options: ["print()", "input()", "scanf()", "read()"], correctIndex: 2 }
+        ] as Question[]
+      };
+    }
+
+    // Fallback for others (General)
     return {
-      title: "Variables and Constants",
+      title: "C Fundamentals",
       slides: [
         {
           id: 1,
-          title: "Defining Variables",
-          content: <p style={{ fontSize: '1.2rem' }}>Variables are names for memory locations. We use them to store state!</p>
+          title: "Keep Learning!",
+          content: <p style={{ fontSize: '1.2rem' }}>You've reached the end of the current mock path. More content coming soon!</p>
         }
       ] as Slide[],
       questions: [
-        { id: 1, text: "Can a variable start with a number?", options: ["Yes", "No"], correctIndex: 1 }
+        { id: 1, text: "Are you ready for more?", options: ["Yes", "Absolutely"], correctIndex: 1 }
       ] as Question[]
     };
   };
@@ -223,7 +272,7 @@ const Lesson = () => {
   const totalSteps = lessonData.slides.length + lessonData.questions.length;
   const currentStep = phase === 'teaching' ? currentSlideIndex : lessonData.slides.length + currentQuestionIndex;
   const progressPercentage = phase === 'summary' ? 100 : ((currentStep) / totalSteps) * 100;
-  const passed = correctAnswers >= 4;
+  const passed = correctAnswers >= Math.ceil(lessonData.questions.length * 0.8);
 
   const handleCheck = () => {
     if (selectedOption === null) return;
@@ -429,7 +478,7 @@ const Lesson = () => {
             
             {!passed && (
                <div className="card" style={{ width: '100%', backgroundColor: 'var(--color-surface)', marginBottom: '32px' }}>
-                 <h3 style={{ fontSize: '1.4rem', color: 'var(--color-text-main)', marginBottom: '16px' }}>Requirement: 4/5 Correct to Pass</h3>
+                 <h3 style={{ fontSize: '1.4rem', color: 'var(--color-text-main)', marginBottom: '16px' }}>Requirement: {Math.ceil(lessonData.questions.length * 0.8)}/{lessonData.questions.length} Correct to Pass</h3>
                  <div style={{ color: 'var(--color-danger)', fontWeight: 800, fontSize: '1.2rem' }}>Score too low. You must review the lesson and try again.</div>
                </div>
             )}
