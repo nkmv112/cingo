@@ -4,6 +4,7 @@ import { useAuth } from './AuthContext';
 interface ProgressContextType {
   completedLessons: number[];
   completeLesson: (id: number) => void;
+  markHistoryAsCompleted: (lessonIds: number[]) => void;
   isUnlocked: (id: number) => boolean;
 }
 
@@ -39,6 +40,13 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const markHistoryAsCompleted = (lessonIds: number[]) => {
+    setCompletedLessons(prev => {
+      const next = Array.from(new Set([...prev, ...lessonIds]));
+      return next;
+    });
+  };
+
   const isUnlocked = (id: number) => {
       if (id === 101) return true;
       
@@ -51,7 +59,12 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   return (
-    <ProgressContext.Provider value={{ completedLessons, completeLesson, isUnlocked }}>
+    <ProgressContext.Provider value={{ 
+      completedLessons, 
+      completeLesson, 
+      markHistoryAsCompleted,
+      isUnlocked 
+    }}>
       {children}
     </ProgressContext.Provider>
   );

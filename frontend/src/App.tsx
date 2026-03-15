@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import Dashboard from './pages/Dashboard';
 import Lesson from './pages/Lesson';
 import Login from './pages/Login';
+import Landing from './pages/Landing';
+import Assessment from './pages/Assessment';
 import ComingSoon from './pages/ComingSoon';
 import Console from './pages/Console';
 import Leaderboard from './pages/Leaderboard';
@@ -37,9 +39,11 @@ function App() {
 
       <BrowserRouter>
         <Routes>
+          <Route path="/landing" element={<Landing />} />
+          <Route path="/assessment" element={<Assessment />} />
           <Route path="/login" element={<Login />} />
           
-          {/* Protected Dashboard */}
+          {/* Protected Dashboard - Redirects to Landing if not logged in */}
           <Route 
             path="/" 
             element={
@@ -67,7 +71,7 @@ function App() {
           <Route path="/console" element={<ProtectedRoute><Console /></ProtectedRoute>} />
           
           {/* Catch all fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/landing" replace />} />
         </Routes>
       </BrowserRouter>
     </>
