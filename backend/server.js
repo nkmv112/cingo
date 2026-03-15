@@ -16,7 +16,13 @@ if (!fs.existsSync(tempDir)) {
 }
 
 // Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const apiKey = process.env.GEMINI_API_KEY;
+if (apiKey) {
+    console.log(`✅ Gemini API Key detected (Length: ${apiKey.length})`);
+} else {
+    console.warn("⚠️ Warning: GEMINI_API_KEY not found in environment variables.");
+}
+const genAI = new GoogleGenerativeAI(apiKey || "");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Health check / welcome route
