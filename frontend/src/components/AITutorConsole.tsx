@@ -46,11 +46,14 @@ const AITutorConsole = () => {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
       const res = await axios.post(`${API_URL}/tutor`, {
         message: userText,
-        // Optional: send history for better context
-        history: messages.slice(-6).map(m => ({
+        // Ensure history starts with 'user' role by skipping the welcome message
+        history: messages
+          .filter(m => m.id !== '1') 
+          .slice(-6)
+          .map(m => ({
             role: m.sender === 'ai' ? 'model' : 'user',
             parts: [{ text: m.text }]
-        }))
+          }))
       });
 
       const aiText = res.data.response || "I'm sorry, I couldn't process that.";
