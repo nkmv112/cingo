@@ -3,16 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import AITutorConsole from '../components/AITutorConsole';
 import { curriculumData } from '../data/curriculumData';
+import { useProgress } from '../auth/ProgressContext';
+import { Star, Lock, Check, BookOpen } from 'lucide-react';
 import '../index.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
-  // Load robust lesson data
+  const { completedLessons, isUnlocked } = useProgress();
   const modules = curriculumData;
 
-  const handleLessonStart = (lessonId: number, status: string) => {
-    if (status !== 'locked') {
+  const handleLessonStart = (lessonId: number) => {
+    if (isUnlocked(lessonId)) {
       navigate(`/lesson/${lessonId}`);
     }
   };
@@ -48,9 +49,9 @@ const Dashboard = () => {
 
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', position: 'relative' }}>
                 {mod.lessons.map((lesson, index) => {
-                  // Create a zigzag pattern
                   const offsetX = index % 2 === 0 ? '-30px' : '30px';
-                  const isLocked = lesson.status === 'locked';
+                  const completed = completedLessons.includes(lesson.id);
+                  const unlocked = isUnlocked(lesson.id);
                   
                   return (
                     <div 
@@ -60,26 +61,40 @@ const Dashboard = () => {
                         display: 'flex', 
                         flexDirection: 'column', 
                         alignItems: 'center',
-                        opacity: isLocked ? 0.6 : 1,
                         position: 'relative'
                       }}
                     >
-                      {/* Bouncing animation wrapper for active lesson */}
-                      <div className={lesson.status === 'unlocked' ? 'bounce-animation' : ''}>
+                      <div className={unlocked && !completed ? 'bounce-animation' : ''}>
                         <button 
-                          onClick={() => handleLessonStart(lesson.id, lesson.status)}
+                          onClick={() => handleLessonStart(lesson.id)}
                           className="lesson-node"
                           style={{
-                            backgroundColor: lesson.status === 'completed' ? '#f59e0b' : isLocked ? 'var(--color-surface-hover)' : mod.color,
-                            borderColor: lesson.status === 'completed' ? '#d97706' : isLocked ? 'var(--color-border)' : mod.shadow,
+                            backgroundColor: completed ? '#f59e0b' : !unlocked ? 'var(--color-surface-hover)' : mod.color,
+                            borderColor: completed ? '#d97706' : !unlocked ? 'var(--color-border)' : mod.shadow,
+                            cursor: unlocked ? 'pointer' : 'default',
+                            opacity: unlocked ? 1 : 0.6,
+                            transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
                           }}
                         >
-                          <span style={{ color: 'white', fontWeight: 'bold', fontSize: '28px' }}>
-                            {lesson.status === 'completed' ? '⭐' : isLocked ? '🔒' : '⭐'}
-                          </span>
+                          <div style={{ color: 'white' }}>
+                            {completed ? (
+                              <Check size={32} strokeWidth={4} />
+                            ) : !unlocked ? (
+                              <Lock size={28} />
+                            ) : (
+                              <Star size={32} fill="white" />
+                            )}
+                          </div>
                         </button>
                       </div>
-                      
+                      <span style={{ 
+                        marginTop: '12px', 
+                        fontWeight: 'bold', 
+                        fontSize: '0.9rem', 
+                        color: unlocked ? 'var(--color-text)' : 'var(--color-text-muted)' 
+                      }}>
+                        {lesson.title}
+                      </span>
                     </div>
                   );
                 })}

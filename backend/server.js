@@ -33,8 +33,8 @@ app.post('/execute', (req, res) => {
 
     fs.writeFileSync(sourcePath, code);
 
-    // 1. Compile Code using system GCC
-    exec(`gcc "${sourcePath}" -o "${outPath}"`, (compileErr, compileStdout, compileStderr) => {
+    // 1. Compile Code using system GCC with -O0 for maximum speed in simple scripts
+    exec(`gcc -O0 "${sourcePath}" -o "${outPath}"`, (compileErr, compileStdout, compileStderr) => {
         if (compileErr) {
             try { fs.unlinkSync(sourcePath); } catch (e) {}
             return res.status(200).json({

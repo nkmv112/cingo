@@ -4,23 +4,10 @@ import { X, BookOpen, Terminal, Play, CheckCircle, ArrowRight } from 'lucide-rea
 import Editor from '@monaco-editor/react';
 import axios from 'axios';
 import { curriculumData } from '../data/curriculumData';
+import { lessons, LessonData, Slide, Question } from '../data/lessonContent';
+import { useProgress } from '../auth/ProgressContext';
 
 type LessonPhase = 'teaching' | 'questionnaire' | 'summary';
-
-interface Question {
-  id: number;
-  text: string;
-  options: string[];
-  correctIndex: number;
-}
-
-interface Slide {
-  id: number;
-  title: string;
-  content: React.ReactNode;
-  hasCodeEditor?: boolean;
-  initialCode?: string;
-}
 
 const Lesson = () => {
   const navigate = useNavigate();
@@ -43,172 +30,14 @@ const Lesson = () => {
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("Ready...");
   const [isRunning, setIsRunning] = useState(false);
+  const [executionCache, setExecutionCache] = useState<Record<string, any>>({});
 
   // ----------------------------------------------------
   // Mock Lesson Data (Expanded multi-slide layout!)
   // ----------------------------------------------------
-  // ----------------------------------------------------
-  // Dynamic Lesson Data Generator
-  // ----------------------------------------------------
-  const getLessonData = (lessonId: string | undefined) => {
-    const idNum = Number(lessonId);
-    
-    // Default / Lesson 101: Structure
-    if (!lessonId || idNum === 101) {
-      return {
-        title: "Structure of C Program",
-        slides: [
-          {
-            id: 1,
-            title: "Basic Structure",
-            content: (
-              <>
-                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-                  Every C program follows a standard structure. It starts with <strong>Pre-processor Directives</strong>, followed by the <strong>main() function</strong>.
-                </p>
-                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-                  The <code>#include &lt;stdio.h&gt;</code> tells the compiler to include the Standard Input Output library so we can use <code>printf</code>.
-                </p>
-              </>
-            )
-          },
-          {
-            id: 2,
-            title: "Your First Program",
-            hasCodeEditor: true,
-            initialCode: `#include <stdio.h>\n\nint main() {\n    printf("Hello, Cingo!\\n");\n    return 0;\n}`,
-            content: (
-              <>
-                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-                  Let's see the structure in action!
-                </p>
-                <ul style={{ paddingLeft: '24px', fontSize: '1.1rem', lineHeight: 1.6 }}>
-                  <li><code>int main()</code> is where execution starts.</li>
-                  <li><code>printf</code> prints text to the screen.</li>
-                  <li><code>return 0</code> signifies successful completion.</li>
-                </ul>
-              </>
-            )
-          }
-        ] as Slide[],
-        questions: [
-          { id: 1, text: "Which directive includes the standard I/O library?", options: ["#include <math.h>", "#include <stdio.h>", "#define PI 3.14", "import stdio;"], correctIndex: 1 },
-          { id: 2, text: "What is the entry point of every C program?", options: ["start()", "init()", "main()", "void()"], correctIndex: 2 }
-        ] as Question[]
-      };
-    }
+  const { completeLesson } = useProgress();
 
-    // Lesson 102: Data Types (The one the user is moving to)
-    if (idNum === 102) {
-      return {
-        title: "Data Types & Sizes",
-        slides: [
-          {
-            id: 1,
-            title: "Common Data Types",
-            content: (
-              <>
-                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-                  C has several built-in data types to handle different kinds of information.
-                </p>
-                <ul style={{ listStyleType: 'none', padding: 0, margin: 0, fontSize: '1.2rem' }}>
-                  <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#60a5fa' }}>int</strong> (4 bytes) - Whole numbers</li>
-                  <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#f472b6' }}>float</strong> (4 bytes) - Decimals</li>
-                  <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#fbbf24' }}>char</strong> (1 byte) - Single characters</li>
-                </ul>
-              </>
-            )
-          },
-          {
-            id: 2,
-            title: "Memory Sizes",
-            hasCodeEditor: true,
-            initialCode: `#include <stdio.h>\n\nint main() {\n    printf("Size of int: %zu bytes\\n", sizeof(int));\n    printf("Size of float: %zu bytes\\n", sizeof(float));\n    printf("Size of char: %zu bytes\\n", sizeof(char));\n    return 0;\n}`,
-            content: (
-              <>
-                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-                  We can use the <code>sizeof()</code> operator to see exactly how much memory C allocates for each type!
-                </p>
-                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8, color: 'var(--color-primary)', fontWeight: 'bold' }}>
-                  👉 Run the code to see the memory footprint on this server!
-                </p>
-              </>
-            )
-          }
-        ] as Slide[],
-        questions: [
-          { id: 1, text: "How much memory does a 'char' typically take?", options: ["1 byte", "2 bytes", "4 bytes", "8 bytes"], correctIndex: 0 },
-          { id: 2, text: "Which operator tells you the memory size of a type?", options: ["calc()", "memory()", "sizeof()", "length()"], correctIndex: 2 }
-        ] as Question[]
-      };
-    }
-
-    // Lesson 103: Variables & Constants
-    if (idNum === 103) {
-      return {
-        title: "Variables & Constants",
-        slides: [
-          {
-            id: 1,
-            title: "Constants in C",
-            content: (
-              <>
-                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-                  A <strong>constant</strong> is a value that cannot be changed during program execution. We use the <code>const</code> keyword.
-                </p>
-                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-                  Example: <code>const float PI = 3.14;</code>
-                </p>
-              </>
-            )
-          }
-        ] as Slide[],
-        questions: [
-          { id: 1, text: "Which keyword makes a variable unchangeable?", options: ["static", "const", "final", "fixed"], correctIndex: 1 }
-        ] as Question[]
-      };
-    }
-
-    // Lesson 104: I/O (printf & scanf)
-    if (idNum === 104) {
-      return {
-        title: "I/O: printf & scanf",
-        slides: [
-          {
-            id: 1,
-            title: "Input with scanf",
-            hasCodeEditor: true,
-            initialCode: `#include <stdio.h>\n\nint main() {\n    int num;\n    printf("Enter a number: ");\n    // scanf needs & before the variable name\n    // In this web demo, we mimic output; scanf might wait forever!\n    num = 42; \n    printf("You entered: %d\\n", num);\n    return 0;\n}`,
-            content: (
-              <p style={{ fontSize: '1.2rem', lineHeight: 1.8 }}>
-                To get input from a user, we use <code>scanf</code>. It uses the same format specifiers as <code>printf</code>!
-              </p>
-            )
-          }
-        ] as Slide[],
-        questions: [
-          { id: 1, text: "Which function is used for input in C?", options: ["print()", "input()", "scanf()", "read()"], correctIndex: 2 }
-        ] as Question[]
-      };
-    }
-
-    // Fallback for others (General)
-    return {
-      title: "C Fundamentals",
-      slides: [
-        {
-          id: 1,
-          title: "Keep Learning!",
-          content: <p style={{ fontSize: '1.2rem' }}>You've reached the end of the current mock path. More content coming soon!</p>
-        }
-      ] as Slide[],
-      questions: [
-        { id: 1, text: "Are you ready for more?", options: ["Yes", "Absolutely"], correctIndex: 1 }
-      ] as Question[]
-    };
-  };
-
-  const lessonData = getLessonData(id);
+  const lessonData = lessons[Number(id)] || lessons[101];
 
   // Reset all states and sync editor code when ID or slide changes
   useEffect(() => {
@@ -238,6 +67,13 @@ const Lesson = () => {
   };
 
   const handleRunCode = async () => {
+    // Check cache first for instantaneous results
+    if (executionCache[code]) {
+      const cached = executionCache[code];
+      setOutput(cached.output);
+      return;
+    }
+
     setIsRunning(true);
     setOutput("Compiling and running...");
     try {
@@ -246,15 +82,21 @@ const Lesson = () => {
         files: [{ name: "main.c", content: code }]
       });
       
+      let finalOutput = "";
       if (response.data.compile && response.data.compile.stderr) {
-         setOutput("COMPILER ERROR:\n" + response.data.compile.stderr);
+         finalOutput = "COMPILER ERROR:\n" + response.data.compile.stderr;
       } else if (response.data.run && response.data.run.stderr) {
-         setOutput((response.data.run.stdout || "") + "\nRUNTIME ERROR:\n" + response.data.run.stderr);
+         finalOutput = (response.data.run.stdout || "") + "\nRUNTIME ERROR:\n" + response.data.run.stderr;
       } else if (response.data.run) {
-         setOutput(response.data.run.stdout || "Program executed successfully with no output.");
+         finalOutput = response.data.run.stdout || "Program executed successfully with no output.";
       } else {
-         setOutput("Execution failed: Unknown response from server.");
+         finalOutput = "Execution failed: Unknown response from server.";
       }
+
+      setOutput(finalOutput);
+      // Cache valid results (or even errors) for this session
+      setExecutionCache(prev => ({ ...prev, [code]: { output: finalOutput } }));
+      
     } catch(error: any) {
       if (error.response && error.response.data) {
         setOutput("API ERROR:\\n" + JSON.stringify(error.response.data, null, 2));
@@ -289,53 +131,60 @@ const Lesson = () => {
       setSelectedOption(null);
     } else {
       setPhase('summary');
+      if (passed) {
+          completeLesson(Number(id));
+      }
     }
   };
 
   const handleNextLesson = () => {
-     // Find exactly the next chronological lesson in the entire curriculum array.
-     let nextLessonId = null;
-     let foundCurrent = false;
-     
-     for (const unit of curriculumData) {
-        for (const lesson of unit.lessons) {
-           if (foundCurrent) {
-              nextLessonId = lesson.id;
-              break;
-           }
-           if (lesson.id === Number(id) || (!id && lesson.id === 101)) { // Fallback to 101
-              foundCurrent = true;
-           }
+    // Find exactly the next chronological lesson in the entire curriculum array.
+    let nextLessonId = null;
+    let foundCurrent = false;
+    
+    for (const unit of curriculumData) {
+      for (const lesson of unit.lessons) {
+        if (foundCurrent) {
+          nextLessonId = lesson.id;
+          break;
         }
-        if (nextLessonId) break;
-     }
+        if (lesson.id === Number(id) || (!id && lesson.id === 101)) { 
+          foundCurrent = true;
+        }
+      }
+      if (nextLessonId) break;
+    }
 
-     if (nextLessonId) {
-        navigate(`/lesson/${nextLessonId}`);
-        // Reset states for the new lesson explicitly to reuse the component safely
-        setPhase('teaching');
-        setCurrentSlideIndex(0);
-        setCurrentQuestionIndex(0);
-        setCorrectAnswers(0);
-        setSelectedOption(null);
-        setIsChecked(false);
-        setIsCorrect(false);
-     } else {
-        navigate('/'); // If no next lesson, just go to dashboard
-     }
+    if (nextLessonId) {
+      navigate(`/lesson/${nextLessonId}`);
+    } else {
+      navigate('/'); // If no next lesson, just go to dashboard
+    }
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: 'var(--color-bg)' }}>
       
-      {/* Header with Progress Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', padding: '24px 48px', gap: '24px', flexShrink: 0 }}>
-        <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}>
+      {/* Header with Progress Bar and Lesson Title */}
+      <div style={{ display: 'flex', alignItems: 'center', padding: '16px 48px', gap: '24px', flexShrink: 0, borderBottom: '1px solid var(--color-border)' }}>
+        <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center' }}>
           <X size={28} />
         </button>
-        <div className="progress-bar-bg" style={{ flex: 1 }}>
-          <div className="progress-bar-fill" style={{ width: `${progressPercentage}%` }}></div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--color-primary)' }}>
+              LESSON {id} <span style={{ color: 'var(--color-text-main)', marginLeft: '8px' }}>{lessonData.title}</span>
+            </span>
+            <span style={{ color: 'var(--color-text-muted)', fontWeight: 'bold' }}>
+              {Math.round(progressPercentage)}% Complete
+            </span>
+          </div>
+          <div className="progress-bar-bg" style={{ width: '100%', height: '12px' }}>
+            <div className="progress-bar-fill" style={{ width: `${progressPercentage}%` }}></div>
+          </div>
         </div>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-danger)', fontWeight: 'bold', fontSize: '1.2rem' }}>
           ❤️ 5
         </div>
@@ -362,13 +211,12 @@ const Lesson = () => {
                        <BookOpen size={28} />
                    </div>
                    <h1 style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--color-text-main)', margin: 0 }}>
-                     {lessonData.title} <span style={{ color: 'var(--color-text-muted)', fontSize: '1.5rem', marginLeft: '12px' }}>({currentSlideIndex + 1}/{lessonData.slides.length})</span>
+                     {currentSlide.title} <span style={{ color: 'var(--color-text-muted)', fontSize: '1.5rem', marginLeft: '12px' }}>({currentSlideIndex + 1}/{lessonData.slides.length})</span>
                    </h1>
                </div>
-               <div className="card" style={{ padding: '32px', color: 'var(--color-text-main)' }}>
-                 <h2 style={{ fontSize: '1.8rem', marginBottom: '24px', color: 'var(--color-primary)' }}>{currentSlide.title}</h2>
-                 {currentSlide.content}
-               </div>
+                <div className="card" style={{ padding: '32px', color: 'var(--color-text-main)' }}>
+                  {currentSlide.content}
+                </div>
             </div>
 
             {/* Interactive Code Column */}
@@ -534,7 +382,7 @@ const Lesson = () => {
           <div>
             {phase === 'teaching' && (
               <button className="btn btn-primary" onClick={handleNextSlide} style={{ width: '200px' }}>
-                {currentSlideIndex < lessonData.slides.length - 1 ? 'Next Topic' : 'Start Questions'}
+                {currentSlideIndex < lessonData.slides.length - 1 ? 'Next Slide' : 'Start Questions'}
               </button>
             )}
 

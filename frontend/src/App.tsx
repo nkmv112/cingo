@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Lesson from './pages/Lesson';
 import Login from './pages/Login';
@@ -21,6 +21,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   return <>{children}</>;
+};
+
+// Wrapper to force remount on path change
+const LessonWrapper = () => {
+  const location = useLocation();
+  return <Lesson key={location.pathname} />;
 };
 
 function App() {
@@ -48,7 +54,7 @@ function App() {
             path="/lesson/:id" 
             element={
               <ProtectedRoute>
-                <Lesson />
+                <LessonWrapper />
               </ProtectedRoute>
             } 
           />
