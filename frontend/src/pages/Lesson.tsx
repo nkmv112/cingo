@@ -47,84 +47,138 @@ const Lesson = () => {
   // ----------------------------------------------------
   // Mock Lesson Data (Expanded multi-slide layout!)
   // ----------------------------------------------------
-  const lessonData = {
-    title: "Variables in C",
-    slides: [
-      {
-        id: 1,
-        title: "What are Variables?",
-        content: (
-          <>
-            <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-              In C, a variable is essentially a storage location in the computer's memory that we can name and use to hold data. Think of it like a labeled box where you can put numbers or text!
-            </p>
-            <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-              To create a variable, you must specify its <strong style={{ color: 'var(--color-primary)' }}>type</strong> and its <strong style={{ color: 'var(--color-primary)' }}>name</strong>. Here are the 3 most common:
-            </p>
-            <ul style={{ listStyleType: 'none', padding: 0, margin: 0, fontSize: '1.2rem' }}>
-              <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#60a5fa' }}>int</strong> - stores whole numbers (e.g., 25, -10)</li>
-              <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#f472b6' }}>float</strong> - stores decimal numbers (e.g., 3.14, -0.5)</li>
-              <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#fbbf24' }}>char</strong> - stores single characters (e.g., 'A', 'z')</li>
-            </ul>
-          </>
-        )
-      },
-      {
-        id: 2,
-        title: "Coding Variables",
-        hasCodeEditor: true,
-        initialCode: `#include <stdio.h>\n\nint main() {\n    // 1. Declare an integer named 'age'\n    int age = 25;\n    \n    // 2. Print the variable using '%d' as a placeholder\n    printf("My age is %d\\n", age);\n    \n    // Try changing 'age' to a different number and run it!\n    return 0;\n}`,
-        content: (
-          <>
-            <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-              Let's declare an <code>int</code> and print it out!
-            </p>
-            <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-              To print a variable in C using <code>printf</code>, you need a <strong>format specifier</strong>. For an <code>int</code>, we use <code>%d</code> inside the string, and pass the variable after the comma!
-            </p>
-            <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8, color: 'var(--color-primary)', fontWeight: 'bold' }}>
-              👉 Try running the code on the right, then try changing 'age' to your age!
-            </p>
-          </>
-        )
-      },
-      {
-        id: 3,
-        title: "Characters and Floats",
-        hasCodeEditor: true,
-        initialCode: `#include <stdio.h>\n\nint main() {\n    float price = 19.99;\n    char grade = 'A';\n    \n    // Floats use %f, Chars use %c\n    printf("The price is $%f\\n", price);\n    printf("Your grade is %c\\n", grade);\n    \n    return 0;\n}`,
-        content: (
-          <>
-            <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-              Different data types require different format specifiers in <code>printf</code>.
-            </p>
-            <ul style={{ paddingLeft: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
-              <li><code>%f</code> is used for <strong>floats</strong>.</li>
-              <li><code>%c</code> is used for <strong>chars</strong>.</li>
-            </ul>
-            <p style={{ marginTop: '24px', fontSize: '1.2rem', lineHeight: 1.8, color: 'var(--color-primary)', fontWeight: 'bold' }}>
-              👉 Run the code, then try changing the grade to 'B'!
-            </p>
-          </>
-        )
-      }
-    ] as Slide[],
-    questions: [
-      { id: 1, text: "Which keyword is used to store whole numbers?", options: ["float", "char", "int", "string"], correctIndex: 2 },
-      { id: 2, text: "How do you declare a variable named 'score' holding the value 100?", options: ["score = 100;", "int score = 100;", "variable score = 100;", "100 = int score;"], correctIndex: 1 },
-      { id: 3, text: "What format specifier prints a character (char)?", options: ["%d", "%f", "%c", "%s"], correctIndex: 2 },
-      { id: 4, text: "Which of these is a valid float declaration?", options: ["float price = 19.99;", "int price = 19.99;", "char price = '19.99';", "float price = '19';"], correctIndex: 0 },
-      { id: 5, text: "Why do we need variable types in C?", options: ["To make the code look colorful.", "So the compiler knows how much memory to allocate.", "Because C doesn't support numbers.", "Types are optional in C."], correctIndex: 1 }
-    ] as Question[]
+  // ----------------------------------------------------
+  // Dynamic Lesson Data Generator
+  // ----------------------------------------------------
+  const getLessonData = (lessonId: string | undefined) => {
+    const idNum = Number(lessonId);
+    
+    // Default / Lesson 101: Structure
+    if (!lessonId || idNum === 101) {
+      return {
+        title: "Structure of C Program",
+        slides: [
+          {
+            id: 1,
+            title: "Basic Structure",
+            content: (
+              <>
+                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
+                  Every C program follows a standard structure. It starts with <strong>Pre-processor Directives</strong>, followed by the <strong>main() function</strong>.
+                </p>
+                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
+                  The <code>#include &lt;stdio.h&gt;</code> tells the compiler to include the Standard Input Output library so we can use <code>printf</code>.
+                </p>
+              </>
+            )
+          },
+          {
+            id: 2,
+            title: "Your First Program",
+            hasCodeEditor: true,
+            initialCode: `#include <stdio.h>\n\nint main() {\n    printf("Hello, Cingo!\\n");\n    return 0;\n}`,
+            content: (
+              <>
+                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
+                  Let's see the structure in action!
+                </p>
+                <ul style={{ paddingLeft: '24px', fontSize: '1.1rem', lineHeight: 1.6 }}>
+                  <li><code>int main()</code> is where execution starts.</li>
+                  <li><code>printf</code> prints text to the screen.</li>
+                  <li><code>return 0</code> signifies successful completion.</li>
+                </ul>
+              </>
+            )
+          }
+        ] as Slide[],
+        questions: [
+          { id: 1, text: "Which directive includes the standard I/O library?", options: ["#include <math.h>", "#include <stdio.h>", "#define PI 3.14", "import stdio;"], correctIndex: 1 },
+          { id: 2, text: "What is the entry point of every C program?", options: ["start()", "init()", "main()", "void()"], correctIndex: 2 }
+        ] as Question[]
+      };
+    }
+
+    // Lesson 102: Data Types (The one the user is moving to)
+    if (idNum === 102) {
+      return {
+        title: "Data Types & Sizes",
+        slides: [
+          {
+            id: 1,
+            title: "Common Data Types",
+            content: (
+              <>
+                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
+                  C has several built-in data types to handle different kinds of information.
+                </p>
+                <ul style={{ listStyleType: 'none', padding: 0, margin: 0, fontSize: '1.2rem' }}>
+                  <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#60a5fa' }}>int</strong> (4 bytes) - Whole numbers</li>
+                  <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#f472b6' }}>float</strong> (4 bytes) - Decimals</li>
+                  <li style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'var(--color-surface-hover)', borderRadius: '8px' }}><strong style={{ color: '#fbbf24' }}>char</strong> (1 byte) - Single characters</li>
+                </ul>
+              </>
+            )
+          },
+          {
+            id: 2,
+            title: "Memory Sizes",
+            hasCodeEditor: true,
+            initialCode: `#include <stdio.h>\n\nint main() {\n    printf("Size of int: %zu bytes\\n", sizeof(int));\n    printf("Size of float: %zu bytes\\n", sizeof(float));\n    printf("Size of char: %zu bytes\\n", sizeof(char));\n    return 0;\n}`,
+            content: (
+              <>
+                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8 }}>
+                  We can use the <code>sizeof()</code> operator to see exactly how much memory C allocates for each type!
+                </p>
+                <p style={{ marginBottom: '24px', fontSize: '1.2rem', lineHeight: 1.8, color: 'var(--color-primary)', fontWeight: 'bold' }}>
+                  👉 Run the code to see the memory footprint on this server!
+                </p>
+              </>
+            )
+          }
+        ] as Slide[],
+        questions: [
+          { id: 1, text: "How much memory does a 'char' typically take?", options: ["1 byte", "2 bytes", "4 bytes", "8 bytes"], correctIndex: 0 },
+          { id: 2, text: "Which operator tells you the memory size of a type?", options: ["calc()", "memory()", "sizeof()", "length()"], correctIndex: 2 }
+        ] as Question[]
+      };
+    }
+
+    // Fallback for others (Variables)
+    return {
+      title: "Variables and Constants",
+      slides: [
+        {
+          id: 1,
+          title: "Defining Variables",
+          content: <p style={{ fontSize: '1.2rem' }}>Variables are names for memory locations. We use them to store state!</p>
+        }
+      ] as Slide[],
+      questions: [
+        { id: 1, text: "Can a variable start with a number?", options: ["Yes", "No"], correctIndex: 1 }
+      ] as Question[]
+    };
   };
 
-  // Sync editor code when slide changes
+  const lessonData = getLessonData(id);
+
+  // Reset all states and sync editor code when ID or slide changes
   useEffect(() => {
-    if (phase === 'teaching' && lessonData.slides[currentSlideIndex].hasCodeEditor) {
+    // Reset core states on ID change
+    setPhase('teaching');
+    setCurrentSlideIndex(0);
+    setCurrentQuestionIndex(0);
+    setCorrectAnswers(0);
+    setSelectedOption(null);
+    setIsChecked(false);
+    setIsCorrect(false);
+    setOutput("Ready...");
+  }, [id]);
+
+  useEffect(() => {
+    if (phase === 'teaching' && lessonData.slides[currentSlideIndex]?.hasCodeEditor) {
       setCode(lessonData.slides[currentSlideIndex].initialCode || "");
-      setOutput("Ready...");
     }
-  }, [currentSlideIndex, phase]);
+  }, [currentSlideIndex, phase, id]);
 
   const handleNextSlide = () => {
     if (currentSlideIndex < lessonData.slides.length - 1) {
