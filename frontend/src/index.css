@@ -174,6 +174,8 @@ body {
   max-width: 1400px;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  gap: 48px;
 }
 
 /* Animations */
@@ -386,6 +388,23 @@ h1, h2, h3, h4, h5, h6 {
   width: 28px;
   height: 28px;
 }
+
+.learning-path-column {
+  flex: 1;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding-bottom: 100px;
+}
+
+.right-panel {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex-shrink: 0;
+}
 /* Responsive Breakpoints */
 @media (max-width: 1024px) {
   .sidebar {
@@ -418,18 +437,20 @@ h1, h2, h3, h4, h5, h6 {
     flex-direction: column;
   }
 
+  .mobile-nav {
+    display: flex !important;
+  }
+
+  /* Chatbot to the top on mobile */
   .right-panel {
+    order: -1; /* Move to top */
     width: 100% !important;
     max-width: 600px;
   }
 
-  .lesson-node {
-    width: 70px;
-    height: 70px;
-  }
-
-  .mobile-nav {
-    display: flex !important;
+  .learning-path-column {
+    order: 1;
+    width: 100% !important;
   }
 }
 

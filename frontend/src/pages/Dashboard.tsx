@@ -24,7 +24,7 @@ const Dashboard = () => {
       <main className="main-content">
         
         {/* Left Column - Learning Path */}
-        <div className="learning-path-column" style={{ flex: '1', maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '48px', paddingBottom: '100px' }}>
+        <div className="learning-path-column">
           {modules.map((mod) => (
             <div key={mod.id} style={{ width: '100%' }}>
               <div style={{ 
@@ -106,7 +106,7 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-        <div className="right-panel flex-col gap-6" style={{ display: 'flex', flexDirection: 'column', gap: '24px', flexShrink: 0 }}>
+        <div className="right-panel">
           
           {/* Top Stats Bar */}
           <div className="card stats-bar" style={{ display: 'flex', justifyContent: 'space-between', padding: '16px', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--color-surface)' }}>
