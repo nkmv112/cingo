@@ -64,11 +64,21 @@ const AITutorConsole = () => {
       };
       
       setMessages(prev => [...prev, aiResponse]);
-    } catch (error) {
+    } catch (error: any) {
+      let errorMsg = "I'm having trouble connecting to my brain right now.";
+      if (error.response) {
+        const backendError = error.response.data?.details || error.response.data?.error || 'Server error';
+        errorMsg += ` (Error ${error.response.status}: ${backendError})`;
+      } else if (error.request) {
+        errorMsg += " (Network error: No response from server)";
+      } else {
+        errorMsg += ` (${error.message})`;
+      }
+      
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         sender: 'ai',
-        text: "I'm having trouble connecting to my brain right now. Please check if the API key is configured!"
+        text: errorMsg
       }]);
     } finally {
       setIsTyping(false);

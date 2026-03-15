@@ -53,7 +53,10 @@ app.post('/tutor', async (req, res) => {
         res.json({ response: response.text() });
     } catch (error) {
         console.error("Gemini Error:", error);
-        res.status(500).json({ error: "Ai Tutor is temporarily unavailable." });
+        res.status(500).json({ 
+            error: "Ai Tutor is temporarily unavailable.",
+            details: error.message || "Unknown error"
+        });
     }
 });
 
