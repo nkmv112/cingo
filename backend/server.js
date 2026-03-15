@@ -13,6 +13,11 @@ if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir);
 }
 
+// Health check / welcome route
+app.get('/', (req, res) => {
+    res.json({ status: "alive", service: "Cingo Compiler Backend" });
+});
+
 // Mimicking Piston API Payload Structure
 app.post('/execute', (req, res) => {
     let code = "";
