@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 interface ProgressContextType {
   completedLessons: number[];
@@ -9,14 +10,28 @@ interface ProgressContextType {
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [completedLessons, setCompletedLessons] = useState<number[]>(() => {
-    const saved = localStorage.getItem('completedLessons');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { username } = useAuth();
+  const [completedLessons, setCompletedLessons] = useState<number[]>([]);
 
+  // Effect to load progress whenever the user changes
   useEffect(() => {
-    localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
-  }, [completedLessons]);
+    if (username) {
+      const storageKey = `cingo_progress_${username}`;
+      const saved = localStorage.getItem(storageKey);
+      setCompletedLessons(saved ? JSON.parse(saved) : []);
+    } else {
+      // Guest or logged out
+      setCompletedLessons([]);
+    }
+  }, [username]);
+
+  // Effect to save progress to the correct user-specific key
+  useEffect(() => {
+    if (username) {
+      const storageKey = `cingo_progress_${username}`;
+      localStorage.setItem(storageKey, JSON.stringify(completedLessons));
+    }
+  }, [completedLessons, username]);
 
   const completeLesson = (id: number) => {
     if (!completedLessons.includes(id)) {
@@ -25,12 +40,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const isUnlocked = (id: number) => {
-      // 101 is always unlocked
       if (id === 101) return true;
-      
-      // Find previous lesson ID
-      // This is a simplified logic: if lesson (id-1) is completed, then id is unlocked.
-      // For first lesson of a unit (e.g. 201), it depends on the last lesson of the previous unit (e.g. 105).
       
       let prevId = id - 1;
       if (id % 100 === 1) {
