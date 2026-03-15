@@ -21,12 +21,12 @@ const Dashboard = () => {
   return (
     <div className="app-container">
       <Sidebar />
-      <main className="main-content" style={{ display: 'flex', gap: '48px', alignItems: 'flex-start' }}>
+      <main className="main-content">
         
         {/* Left Column - Learning Path */}
-        <div style={{ flex: '1', maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '48px', paddingBottom: '100px' }}>
+        <div className="learning-path-column" style={{ flex: '1', maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '48px', paddingBottom: '100px' }}>
           {modules.map((mod) => (
-            <div key={mod.id}>
+            <div key={mod.id} style={{ width: '100%' }}>
               <div style={{ 
                 backgroundColor: mod.color, 
                 color: 'white', 
@@ -36,14 +36,16 @@ const Dashboard = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                boxShadow: `0 4px 0 ${mod.shadow}`
+                boxShadow: `0 4px 0 ${mod.shadow}`,
+                flexWrap: 'wrap',
+                gap: '16px'
               }}>
-                <div>
-                  <h2 style={{ fontSize: '1.8rem', fontWeight: 900, letterSpacing: '1px' }}>{mod.title}</h2>
-                  <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>{mod.description}</p>
+                <div style={{ minWidth: '200px', flex: 1 }}>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '1px' }}>{mod.title}</h2>
+                  <p style={{ fontSize: '1rem', opacity: 0.9 }}>{mod.description}</p>
                 </div>
-                <button className="btn btn-outline" style={{ backgroundColor: 'white', color: mod.color, border: 'none', boxShadow: '0 4px 0 rgba(0,0,0,0.1)' }}>
-                  GUIDEBOOK
+                <button className="btn btn-outline" style={{ backgroundColor: 'white', color: mod.color, border: 'none', boxShadow: '0 4px 0 rgba(0,0,0,0.1)', fontSize: '0.8rem', padding: '8px 16px' }}>
+                  GUIDE
                 </button>
               </div>
 
@@ -57,7 +59,7 @@ const Dashboard = () => {
                     <div 
                       key={lesson.id} 
                       style={{ 
-                        transform: `translateX(${offsetX})`, 
+                        transform: `translateX(${window.innerWidth < 768 ? '0' : offsetX})`, 
                         display: 'flex', 
                         flexDirection: 'column', 
                         alignItems: 'center',
@@ -78,11 +80,11 @@ const Dashboard = () => {
                         >
                           <div style={{ color: 'white' }}>
                             {completed ? (
-                              <Check size={32} strokeWidth={4} />
+                              <Check size={window.innerWidth < 768 ? 24 : 32} strokeWidth={4} />
                             ) : !unlocked ? (
-                              <Lock size={28} />
+                              <Lock size={window.innerWidth < 768 ? 20 : 28} />
                             ) : (
-                              <Star size={32} fill="white" />
+                              <Star size={window.innerWidth < 768 ? 24 : 32} fill="white" />
                             )}
                           </div>
                         </button>
@@ -90,7 +92,9 @@ const Dashboard = () => {
                       <span style={{ 
                         marginTop: '12px', 
                         fontWeight: 'bold', 
-                        fontSize: '0.9rem', 
+                        fontSize: '0.8rem', 
+                        textAlign: 'center',
+                        maxWidth: '120px',
                         color: unlocked ? 'var(--color-text)' : 'var(--color-text-muted)' 
                       }}>
                         {lesson.title}
@@ -102,7 +106,7 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-        <div className="right-panel flex-col gap-6" style={{ width: '400px', display: 'flex', flexDirection: 'column', gap: '24px', flexShrink: 0 }}>
+        <div className="right-panel flex-col gap-6" style={{ display: 'flex', flexDirection: 'column', gap: '24px', flexShrink: 0 }}>
           
           {/* Top Stats Bar */}
           <div className="card stats-bar" style={{ display: 'flex', justifyContent: 'space-between', padding: '16px', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--color-surface)' }}>
@@ -118,19 +122,19 @@ const Dashboard = () => {
           </div>
           
           {/* AI Tutor Console Integration */}
-          <div className="slide-up-animation" style={{ animationDelay: '0.1s' }}>
+          <div className="slide-up-animation ai-console-module" style={{ animationDelay: '0.1s' }}>
              <AITutorConsole />
           </div>
 
           {/* League Card */}
           <div className="card slide-up-animation" style={{ animationDelay: '0.2s' }}>
-            <h3 style={{ marginBottom: '16px', fontSize: '1.2rem', fontWeight: 800 }}>Unlock Leaderboards!</h3>
+            <h3 style={{ marginBottom: '16px', fontSize: '1rem', fontWeight: 800 }}>Unlock Leaderboards!</h3>
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-              <div className="pulse-slow" style={{ width: '60px', height: '60px', backgroundColor: '#ffd900', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', flexShrink: 0, border: '4px solid #e5b400' }}>
+              <div className="pulse-slow" style={{ width: '50px', height: '50px', backgroundColor: '#ffd900', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0, border: '4px solid #e5b400' }}>
                 🏆
               </div>
-              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', lineHeight: '1.5', fontWeight: 600 }}>
-                Complete 10 more lessons to enter the Bronze League and compete with others.
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem', lineHeight: '1.4', fontWeight: 600 }}>
+                Complete {10 - completedLessons.length % 10} more to enter Bronze League.
               </p>
             </div>
           </div>

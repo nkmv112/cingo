@@ -386,3 +386,100 @@ h1, h2, h3, h4, h5, h6 {
   width: 28px;
   height: 28px;
 }
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+  }
+  .main-content {
+    margin-left: 200px;
+    width: calc(100vw - 200px);
+    padding: 24px;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none; /* Hide sidebar on mobile */
+  }
+  
+  .main-content {
+    margin-left: 0;
+    width: 100vw;
+    padding: 16px;
+    flex-direction: column !important; /* Stack columns */
+    align-items: center !important;
+    gap: 24px;
+    padding-bottom: 90px; /* Space for bottom nav */
+  }
+
+  .app-container {
+    flex-direction: column;
+  }
+
+  .right-panel {
+    width: 100% !important;
+    max-width: 600px;
+  }
+
+  .lesson-node {
+    width: 70px;
+    height: 70px;
+  }
+
+  .mobile-nav {
+    display: flex !important;
+  }
+}
+
+/* Mobile Bottom Navigation */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: var(--color-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--color-border);
+  z-index: 100;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.mobile-nav-item.active {
+  color: var(--color-primary);
+}
+
+.mobile-nav-item .icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Scrollbar adjustment for AI Console on mobile */
+@media (max-width: 480px) {
+  .console-card {
+    height: 350px !important;
+  }
+  
+  .ai-tutor-container {
+    height: 400px !important;
+  }
+}
