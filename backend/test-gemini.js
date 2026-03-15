@@ -6,7 +6,7 @@ async function listModels() {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     // There isn't a direct listModels in the client SDK like this, 
     // but we can try a simple generation with a known model to verify.
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     const result = await model.generateContent("test");
     console.log("SUCCESS: gemini-1.5-flash is available.");
   } catch (error) {
