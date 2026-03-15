@@ -27,6 +27,10 @@ const Sidebar = () => {
           <Home className="icon" />
           <span>Learn</span>
         </NavLink>
+        <NavLink to="/console" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <Terminal className="icon" />
+          <span>Playground</span>
+        </NavLink>
         <NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
           <Award className="icon" />
           <span>Leaderboard</span>
@@ -42,10 +46,6 @@ const Sidebar = () => {
         <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
           <Settings className="icon" />
           <span>Settings</span>
-        </NavLink>
-        <NavLink to="/console" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-          <Terminal className="icon" />
-          <span>Playground</span>
         </NavLink>
       </nav>
 
