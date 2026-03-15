@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Code2 } from 'lucide-react';
+import { Send, Bot, User, Code2, Loader2 } from 'lucide-react';
+import axios from 'axios';
 
 interface Message {
   id: string;
@@ -13,10 +14,11 @@ const AITutorConsole = () => {
     {
       id: '1',
       sender: 'ai',
-      text: "Hello! I'm your C programming AI tutor. Ask me anything about syntax, concepts, or drop some code for me to review!",
+      text: "Hello! I'm your Gemini-powered C programming tutor. Ask me anything about syntax, concepts, or share your code for a review!",
     }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -25,32 +27,52 @@ const AITutorConsole = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isTyping]);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isTyping) return;
 
-    // Add user message
-    const userMsg: Message = { id: Date.now().toString(), sender: 'user', text: inputValue };
-    setMessages(prev => [...prev, userMsg]);
+    const userText = inputValue.trim();
     setInputValue('');
 
-    // Mock AI Response with slight delay
-    setTimeout(() => {
-      const isCodeQuery = userMsg.text.toLowerCase().includes('how') || userMsg.text.toLowerCase().includes('code');
-      
+    // Add user message
+    const userMsg: Message = { id: Date.now().toString(), sender: 'user', text: userText };
+    setMessages(prev => [...prev, userMsg]);
+    
+    setIsTyping(true);
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const res = await axios.post(`${API_URL}/tutor`, {
+        message: userText,
+        // Optional: send history for better context
+        history: messages.slice(-6).map(m => ({
+            role: m.sender === 'ai' ? 'model' : 'user',
+            parts: [{ text: m.text }]
+        }))
+      });
+
+      const aiText = res.data.response || "I'm sorry, I couldn't process that.";
+      const isCode = aiText.includes('```') || aiText.includes('#include');
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: isCodeQuery 
-          ? "Here is how you typically structure that in C:\n\n#include <stdio.h>\n\nint main() {\n    printf(\"Hello, Example!\\n\");\n    return 0;\n}"
-          : "That's a great question! In C programming, memory is managed manually, which is why concepts like pointers are so powerful.",
-        isCode: isCodeQuery
+        text: aiText,
+        isCode: isCode
       };
       
       setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    } catch (error) {
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        sender: 'ai',
+        text: "I'm having trouble connecting to my brain right now. Please check if the API key is configured!"
+      }]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   return (
@@ -84,23 +106,40 @@ const AITutorConsole = () => {
               color: '#f4f4f5', padding: '12px 16px', borderRadius: '12px', 
               borderTopLeftRadius: msg.sender === 'ai' ? '0' : '12px',
               borderTopRightRadius: msg.sender === 'user' ? '0' : '12px',
-              maxWidth: '85%'
+              maxWidth: '85%',
+              wordBreak: 'break-word'
             }}>
               {msg.isCode ? (
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#10b981', fontSize: '0.85rem' }}>
-                    <Code2 size={16} /> <span style={{ fontFamily: 'monospace' }}>example.c</span>
+                    <Code2 size={16} /> <span style={{ fontFamily: 'monospace' }}>tutor_example.c</span>
                   </div>
                   <pre style={{ backgroundColor: '#000', padding: '12px', borderRadius: '8px', overflowX: 'auto', fontFamily: 'monospace', fontSize: '0.9rem', margin: 0 }}>
-                    <code>{msg.text}</code>
+                    <code>{msg.text.replace(/```[a-z]*\n?/g, '').replace(/```/g, '')}</code>
                   </pre>
                 </div>
               ) : (
-                <p style={{ margin: 0, lineHeight: 1.5 }}>{msg.text}</p>
+                <p style={{ margin: 0, lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{msg.text}</p>
               )}
             </div>
           </div>
         ))}
+
+        {isTyping && (
+          <div style={{ display: 'flex', gap: '12px', opacity: 0, animation: 'fadeIn 0.3s forwards' }}>
+            <div style={{ 
+              width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0,
+              backgroundColor: '#10b981',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white'
+            }}>
+              <Bot size={18} />
+            </div>
+            <div style={{ backgroundColor: '#27272a', color: '#10b981', padding: '12px 16px', borderRadius: '12px', borderTopLeftRadius: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Loader2 size={16} className="animate-spin" />
+              <span style={{ fontSize: '0.9rem', fontWeight: 'bold', fontFamily: 'monospace' }}>Gemini is thinking...</span>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -108,23 +147,26 @@ const AITutorConsole = () => {
       <form onSubmit={handleSend} style={{ backgroundColor: '#18181b', padding: '12px 16px', display: 'flex', gap: '12px' }}>
         <input 
           type="text" 
+          disabled={isTyping}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Ask a question about C..."
+          placeholder={isTyping ? "Waiting for AI..." : "Ask a question about C..."}
           style={{ 
             flex: 1, backgroundColor: '#27272a', border: '1px solid #3f3f46', borderRadius: '8px', 
-            padding: '10px 16px', color: 'white', outline: 'none', fontFamily: 'monospace'
+            padding: '10px 16px', color: 'white', outline: 'none', fontFamily: 'monospace',
+            opacity: isTyping ? 0.6 : 1
           }}
         />
         <button 
           type="submit" 
+          disabled={isTyping || !inputValue.trim()}
           style={{ 
-            backgroundColor: '#10b981', color: 'white', border: 'none', borderRadius: '8px', 
-            width: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+            backgroundColor: isTyping ? '#3f3f46' : '#10b981', color: 'white', border: 'none', borderRadius: '8px', 
+            width: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: isTyping ? 'default' : 'pointer',
             transition: 'background-color 0.2s'
           }}
         >
-          <Send size={20} style={{ marginLeft: '4px' }} />
+          {isTyping ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} style={{ marginLeft: '4px' }} />}
         </button>
       </form>
 

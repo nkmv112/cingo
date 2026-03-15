@@ -3,6 +3,8 @@ const cors = require('cors');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 app.use(cors());
@@ -13,9 +15,40 @@ if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir);
 }
 
+// Initialize Gemini
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 // Health check / welcome route
 app.get('/', (req, res) => {
     res.json({ status: "alive", service: "Cingo Compiler Backend" });
+});
+
+// AI Tutor Endpoint
+app.post('/tutor', async (req, res) => {
+    const { message, history } = req.body;
+    
+    if (!process.env.GEMINI_API_KEY) {
+        return res.json({ 
+            response: "Gemini API key is missing on the server. Please add it to your environment variables." 
+        });
+    }
+
+    try {
+        const chat = model.startChat({
+            history: history || [],
+            generationConfig: { maxOutputTokens: 500 },
+        });
+
+        const systemPrompt = "You are Cingo AI, an expert C programming tutor for the KTU S2 syllabus. Be encouraging, concise, and provide clear code examples when asked. Only answer questions related to C programming and computer science basics. If asked about other topics, politely redirect to C programming.";
+        
+        const result = await chat.sendMessage(systemPrompt + "\n\nUser: " + message);
+        const response = await result.response;
+        res.json({ response: response.text() });
+    } catch (error) {
+        console.error("Gemini Error:", error);
+        res.status(500).json({ error: "Ai Tutor is temporarily unavailable." });
+    }
 });
 
 // Mimicking Piston API Payload Structure
