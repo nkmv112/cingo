@@ -11,10 +11,10 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { completedLessons, isUnlocked } = useProgress();
   const modules = curriculumData;
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 900);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -215,6 +215,23 @@ const Dashboard = () => {
         {/* Right Panel - Stats & AI Tutor */}
         <div className="right-panel">
           
+          {/* New Quests Shortcut Card - MOVED TO TOP FOR MOBILE VISIBILITY */}
+          <div className="card slide-up-animation" style={{ 
+            animationDelay: '0.1s', 
+            backgroundColor: 'var(--color-surface)',
+            borderLeft: '4px solid var(--color-secondary)'
+          }}>
+            <h3 style={{ marginBottom: '16px', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Available Quests</h3>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem', marginBottom: '16px' }}>Master challenges and earn special badges.</p>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => navigate('/quests')}
+              style={{ width: '100%', fontSize: '0.75rem' }}
+            >
+              Explore Quests
+            </button>
+          </div>
+
           {/* Top Stats Bar - Elegant Styling */}
           <div style={{ display: 'flex', gap: '12px' }}>
             <div className="stat-item" style={{ color: 'var(--color-warning)', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
@@ -229,13 +246,13 @@ const Dashboard = () => {
           </div>
           
           {/* AI Tutor Console Integration */}
-          <div className="slide-up-animation ai-console-module" style={{ animationDelay: '0.1s' }}>
+          <div className="slide-up-animation ai-console-module" style={{ animationDelay: '0.2s' }}>
              <AITutorConsole />
           </div>
 
           {/* League Promo Card */}
           <div className="card slide-up-animation" style={{ 
-            animationDelay: '0.2s', 
+            animationDelay: '0.3s', 
             backgroundColor: 'var(--color-surface)',
             backgroundImage: 'radial-gradient(circle at top right, var(--color-primary-light), transparent 70%)' 
           }}>
@@ -251,23 +268,6 @@ const Dashboard = () => {
                 <button className="btn btn-outline" style={{ fontSize: '0.7rem', padding: '6px 12px' }}>Engage</button>
               </div>
             </div>
-          </div>
-
-          {/* New Quests Shortcut Card for better Visibility */}
-          <div className="card slide-up-animation" style={{ 
-            animationDelay: '0.3s', 
-            backgroundColor: 'var(--color-surface)',
-            borderLeft: '4px solid var(--color-secondary)'
-          }}>
-            <h3 style={{ marginBottom: '16px', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Available Quests</h3>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem', marginBottom: '16px' }}>Master challenges and earn special badges.</p>
-            <button 
-              className="btn btn-primary" 
-              onClick={() => navigate('/quests')}
-              style={{ width: '100%', fontSize: '0.75rem' }}
-            >
-              Explore Quests
-            </button>
           </div>
 
         </div>

@@ -20,10 +20,10 @@ const QuestSolver = () => {
   const [output, setOutput] = useState('');
   const [isCompiling, setIsCompiling] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 900);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);

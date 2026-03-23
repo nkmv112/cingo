@@ -31,10 +31,10 @@ const Lesson = () => {
   const [output, setOutput] = useState("Ready...");
   const [isRunning, setIsRunning] = useState(false);
   const [executionCache, setExecutionCache] = useState<Record<string, any>>({});
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 900);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
