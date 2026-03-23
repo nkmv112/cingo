@@ -8,6 +8,9 @@ import Assessment from './pages/Assessment';
 import ComingSoon from './pages/ComingSoon';
 import Console from './pages/Console';
 import Leaderboard from './pages/Leaderboard';
+import Quests from './pages/Quests';
+import QuestSolver from './pages/QuestSolver';
+import Settings from './pages/Settings';
 import { useAuth } from './auth/AuthContext';
 import AmbientBackground from './components/AmbientBackground';
 
@@ -29,6 +32,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const LessonWrapper = () => {
   const location = useLocation();
   return <Lesson key={location.pathname} />;
+};
+
+// Wrapper to force remount when switching quests
+const QuestSolverWrapper = () => {
+  const location = useLocation();
+  return <QuestSolver key={location.pathname} />;
 };
 
 function App() {
@@ -63,11 +72,14 @@ function App() {
             } 
           />
           
+          {/* Protected Quests & Challenges Routes */}
+          <Route path="/quests" element={<ProtectedRoute><Quests /></ProtectedRoute>} />
+          <Route path="/quests/:id" element={<ProtectedRoute><QuestSolverWrapper /></ProtectedRoute>} />
+          
           {/* Protected Placeholder Routes */}
           <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-          <Route path="/quests" element={<ProtectedRoute><ComingSoon title="Quests & Challenges" /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><ComingSoon title="User Profile" /></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute><ComingSoon title="Account Settings" /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/console" element={<ProtectedRoute><Console /></ProtectedRoute>} />
           
           {/* Catch all fallback */}

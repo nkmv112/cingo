@@ -3,9 +3,13 @@ import { useAuth } from './AuthContext';
 
 interface ProgressContextType {
   completedLessons: number[];
+  completedQuests: number[];
   completeLesson: (id: number) => void;
+  completeQuest: (id: number) => void;
   markHistoryAsCompleted: (lessonIds: number[]) => void;
   isUnlocked: (id: number) => boolean;
+  isQuestUnlocked: (questId: number) => boolean;
+  resetProgress: () => void;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -13,6 +17,7 @@ const ProgressContext = createContext<ProgressContextType | undefined>(undefined
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { username } = useAuth();
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
+  const [completedQuests, setCompletedQuests] = useState<number[]>([]);
 
   // Effect to load progress whenever the user changes
   useEffect(() => {
@@ -20,9 +25,14 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const storageKey = `cingo_progress_${username}`;
       const saved = localStorage.getItem(storageKey);
       setCompletedLessons(saved ? JSON.parse(saved) : []);
+
+      const questsKey = `cingo_quests_${username}`;
+      const savedQuests = localStorage.getItem(questsKey);
+      setCompletedQuests(savedQuests ? JSON.parse(savedQuests) : []);
     } else {
       // Guest or logged out
       setCompletedLessons([]);
+      setCompletedQuests([]);
     }
   }, [username]);
 
@@ -31,13 +41,27 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (username) {
       const storageKey = `cingo_progress_${username}`;
       localStorage.setItem(storageKey, JSON.stringify(completedLessons));
+
+      const questsKey = `cingo_quests_${username}`;
+      localStorage.setItem(questsKey, JSON.stringify(completedQuests));
     }
-  }, [completedLessons, username]);
+  }, [completedLessons, completedQuests, username]);
 
   const completeLesson = (id: number) => {
     if (!completedLessons.includes(id)) {
       setCompletedLessons((prev) => [...prev, id]);
     }
+  };
+
+  const completeQuest = (id: number) => {
+    if (!completedQuests.includes(id)) {
+      setCompletedQuests((prev) => [...prev, id]);
+    }
+  };
+
+  const resetProgress = () => {
+    setCompletedLessons([]);
+    setCompletedQuests([]);
   };
 
   const markHistoryAsCompleted = (lessonIds: number[]) => {
@@ -58,12 +82,21 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return completedLessons.includes(prevId);
   };
 
+  const isQuestUnlocked = (questId: number): boolean => {
+    if (questId === 1) return true;
+    return completedQuests.includes(questId - 1);
+  };
+
   return (
     <ProgressContext.Provider value={{ 
-      completedLessons, 
+      completedLessons,
+      completedQuests, 
       completeLesson, 
+      completeQuest,
       markHistoryAsCompleted,
-      isUnlocked 
+      isUnlocked,
+      isQuestUnlocked,
+      resetProgress 
     }}>
       {children}
     </ProgressContext.Provider>

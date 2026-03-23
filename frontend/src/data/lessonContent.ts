@@ -50,6 +50,122 @@ export const lessons: Record<number, LessonData> = {
   403: { title: "Logical Operators", slides: [], questions: [] },
   404: { title: "Bitwise Operators", slides: [], questions: [] },
   405: { title: "Assignment Operators", slides: [], questions: [] },
+  
+  // ─── UNIT 30: FINAL REVISION (KTU THEMED) ──────────────────────────────────
+  3001: {
+    title: "Arrays Revision",
+    slides: [
+      { 
+        id: 1, title: "KTU: 1D & 2D Arrays", 
+        content: React.createElement('div', null,
+          React.createElement('p', null, "In KTU exams, Questions often focus on:"),
+          React.createElement('ul', null,
+            React.createElement('li', null, "Finding Largest/Smallest element."),
+            React.createElement('li', null, "Matrix Addition & Multiplication."),
+            React.createElement('li', null, "Trace and Transpose of a matrix.")
+          )
+        )
+      },
+      { 
+        id: 2, title: "Matrix Multiplication Trace", 
+        hasCodeEditor: true, 
+        initialCode: '#include <stdio.h>\n\nint main() {\n    int a[2][2] = {{1,2},{3,4}}, i, j, sum=0;\n    // Find trace (sum of main diagonal elements)\n    for(i=0; i<2; i++) sum += a[i][i];\n    printf("Trace: %d\\n", sum);\n    return 0;\n}',
+        content: React.createElement('p', null, "Trace is a common 3-mark question. Practice finding the trace of a 2x2 matrix.") 
+      }
+    ],
+    questions: [
+      { id: 1, text: "What is the maximum number of elements in a[10][5]?", options: ["15", "50", "10"], correctIndex: 1 }
+    ]
+  },
+  3002: {
+    title: "Strings Revision",
+    slides: [
+      { 
+        id: 1, title: "String Library Functions", 
+        content: React.createElement('div', null,
+          React.createElement('p', null, "Common <string.h> functions for KTU:"),
+          React.createElement('ul', null,
+            React.createElement('li', null, "strlen(), strcpy(), strcat(), strcmp()."),
+            React.createElement('li', null, "Important: Palindrome check using recursion or loops.")
+          )
+        )
+      },
+      { 
+        id: 2, title: "Palindrome Logic", 
+        hasCodeEditor: true, 
+        initialCode: '#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char str[] = "level";\n    int len = strlen(str), i, flag=0;\n    for(i=0; i<len/2; i++) {\n        if(str[i] != str[len-i-1]) flag=1;\n    }\n    if(flag==0) printf("Palindrome\\n");\n    else printf("Not Palindrome\\n");\n    return 0;\n}',
+        content: React.createElement('p', null, "Practice the Palindrome check, a very frequent KTU Lab and Theory question.") 
+      }
+    ],
+    questions: [
+      { id: 1, text: "Which function compares two strings?", options: ["strcpy", "strcmp", "strcat"], correctIndex: 1 }
+    ]
+  },
+  3003: {
+    title: "Control Flow Revision",
+    slides: [
+      { 
+        id: 1, title: "Switch Case & Patterns", 
+        content: React.createElement('div', null,
+          React.createElement('p', null, "KTU Exam Essentials:"),
+          React.createElement('ul', null,
+            React.createElement('li', null, "Menu driven programs using switch-case."),
+            React.createElement('li', null, "Star/Number patterns using nested loops.")
+          )
+        )
+      },
+      { 
+        id: 2, title: "Pattern Challenge", 
+        hasCodeEditor: true, 
+        initialCode: '#include <stdio.h>\n\nint main() {\n    int i, j;\n    for(i=1; i<=3; i++) {\n        for(j=1; j<=i; j++) printf("* ");\n        printf("\\n");\n    }\n    return 0;\n}',
+        content: React.createElement('p', null, "Write a program to print a right-angled triangle star pattern.") 
+      }
+    ],
+    questions: [
+      { id: 1, text: "The 'default' case in switch is mandatory.", options: ["True", "False"], correctIndex: 1 }
+    ]
+  },
+  3004: {
+    title: "KTU Exam Programs",
+    slides: [
+      { 
+        id: 1, title: "Previous Year Gold", 
+        content: React.createElement('div', null,
+          React.createElement('p', null, "These programs appear in almost every exam:"),
+          React.createElement('ul', null,
+            React.createElement('li', null, "Armstrong Number (6 Marks)."),
+            React.createElement('li', null, "Binary to Decimal Conversion."),
+            React.createElement('li', null, "Sum of Series (e.g., 1 + x + x^2/2!...).")
+          )
+        )
+      },
+      { 
+        id: 2, title: "Armstrong Test", 
+        hasCodeEditor: true, 
+        initialCode: '#include <stdio.h>\n\nint main() {\n    int n=153, temp, rem, sum=0;\n    temp = n;\n    while(temp != 0) {\n        rem = temp % 10;\n        sum += rem*rem*rem;\n        temp /= 10;\n    }\n    if(sum == n) printf("Armstrong\\n");\n    return 0;\n}',
+        content: React.createElement('p', null, "Verify if 153 is an Armstrong number.") 
+      }
+    ],
+    questions: [
+      { id: 1, text: "What is 1^3 + 5^3 + 3^3?", options: ["153", "125", "150"], correctIndex: 0 }
+    ]
+  },
+  3005: {
+    title: "KTU Mock Test",
+    slides: [
+      { 
+        id: 1, title: "Final Sprint", 
+        content: React.createElement('p', null, "This mock test covers all 5 modules based on the KTU S2 syllabus. Good luck!") 
+      }
+    ],
+    questions: [
+      { id: 1, text: "Size of int in a 16-bit compiler?", options: ["2 bytes", "4 bytes", "1 byte"], correctIndex: 0 },
+      { id: 2, text: "Which header is used for malloc()?", options: ["stdio.h", "string.h", "stdlib.h"], correctIndex: 2 },
+      { id: 3, text: "A pointer stores the value of a variable.", options: ["True", "False (it stores address)"], correctIndex: 1 },
+      { id: 4, text: "Recursive functions must have a base case.", options: ["True", "False"], correctIndex: 0 },
+      { id: 5, text: "Which of these is used to read a line of string?", options: ["scanf", "gets", "getchar"], correctIndex: 1 }
+    ]
+  },
 };
 
 // Full synchronization map from curriculumData.ts

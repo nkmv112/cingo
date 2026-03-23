@@ -31,6 +31,13 @@ const Lesson = () => {
   const [output, setOutput] = useState("Ready...");
   const [isRunning, setIsRunning] = useState(false);
   const [executionCache, setExecutionCache] = useState<Record<string, any>>({});
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // ----------------------------------------------------
   // Mock Lesson Data (Expanded multi-slide layout!)
@@ -166,22 +173,22 @@ const Lesson = () => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: 'var(--color-bg)' }}>
       
       {/* Header with Progress Bar and Lesson Title */}
-      <div style={{ display: 'flex', alignItems: 'center', padding: '16px 48px', gap: '24px', flexShrink: 0, borderBottom: '1px solid var(--color-border)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', padding: isMobile ? '12px 16px' : '16px 48px', gap: isMobile ? '12px' : '24px', flexShrink: 0, borderBottom: '1px solid var(--color-border)' }}>
         <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center' }}>
-          <X size={28} />
+          <X size={24} />
         </button>
         
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '8px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--color-primary)' }}>
-              LESSON {id} <span style={{ color: 'var(--color-text-main)', marginLeft: '8px' }}>{lessonData.title}</span>
+            <span style={{ fontSize: isMobile ? '0.9rem' : '1.2rem', fontWeight: 800, color: 'var(--color-primary)' }}>
+              LESSON {id} <span style={{ color: 'var(--color-text-main)', marginLeft: '8px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{isMobile ? '' : lessonData.title}</span>
             </span>
             <span style={{ color: 'var(--color-text-muted)', fontWeight: 'bold' }}>
               {Math.round(progressPercentage)}% Complete
             </span>
           </div>
-          <div className="progress-bar-bg" style={{ width: '100%', height: '12px' }}>
-            <div className="progress-bar-fill" style={{ width: `${progressPercentage}%` }}></div>
+          <div className="progress-bar-bg" style={{ width: '100%', height: '12px', backgroundColor: 'var(--color-border)' }}>
+            <div className="progress-bar-fill" style={{ width: `${progressPercentage}%`, backgroundColor: 'var(--color-primary)' }}></div>
           </div>
         </div>
 
@@ -194,11 +201,11 @@ const Lesson = () => {
       <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '0 24px', overflowY: 'auto' }}>
         
         {phase === 'teaching' && (
-          <div className="slide-up-animation" style={{ 
+          <div className={`slide-up-animation ${currentSlide.hasCodeEditor ? 'flex-column-mobile' : ''}`} style={{ 
             maxWidth: currentSlide.hasCodeEditor ? '1400px' : '750px', 
             width: '100%', 
             display: 'flex', 
-            flexDirection: currentSlide.hasCodeEditor ? 'row' : 'column',
+            flexDirection: currentSlide.hasCodeEditor ? undefined : 'column',
             gap: '48px',
             marginTop: '32px', 
             marginBottom: '100px' 
@@ -260,7 +267,7 @@ const Lesson = () => {
         {/* Questionnaire & Summary unchanged logic... */}
         {phase === 'questionnaire' && (
           <div className="slide-up-animation" key={currentQuestionIndex} style={{ maxWidth: '600px', width: '100%', display: 'flex', flexDirection: 'column', marginTop: '48px', marginBottom: '100px' }}>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '32px', color: 'var(--color-text-main)' }}>
+            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '32px', color: 'var(--color-text-main)', textTransform: 'none', letterSpacing: 'normal' }}>
              <span style={{ color: 'var(--color-primary)', marginRight: '12px' }}>Q{currentQuestionIndex + 1}.</span> 
              {currentQ.text}
             </h1>

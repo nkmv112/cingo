@@ -412,11 +412,11 @@ export const curriculumData = [
     color: "#f43f5e",
     shadow: "#e11d48",
     lessons: [
-      { id: 3001, title: "Arrays Revision", status: "locked" },
-      { id: 3002, title: "Strings Revision", status: "locked" },
-      { id: 3003, title: "Control Flow Revision", status: "locked" },
-      { id: 3004, title: "KTU Exam Programs", status: "locked" },
-      { id: 3005, title: "Mock Test", status: "locked" }
+      { id: 3001, title: "Arrays Revision", status: "unlocked" },
+      { id: 3002, title: "Strings Revision", status: "unlocked" },
+      { id: 3003, title: "Control Flow Revision", status: "unlocked" },
+      { id: 3004, title: "KTU Exam Programs", status: "unlocked" },
+      { id: 3005, title: "Mock Test", status: "unlocked" }
     ]
   }
 ];

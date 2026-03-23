@@ -2,22 +2,24 @@ import React from 'react';
 
 /**
  * AmbientBackground
- * Renders a dynamic "Aurora" mesh gradient using floating animated orbs.
- * Colors are synchronized with index.css CSS variables.
+ * Renders an animated, organic layered wave background 
+ * using the 4-color aesthetic matching the rest of the theme.
  */
-const AmbientBackground: React.FC = () => (
-  <div className="ambient-bg" aria-hidden="true">
-    <div className="aurora-container">
-      <div className="aurora-orb orb-1" />
-      <div className="aurora-orb orb-2" />
-      <div className="aurora-orb orb-3" />
-      <div className="aurora-orb orb-4" />
-      <div className="aurora-orb orb-5" />
-    </div>
+const AmbientBackground: React.FC = () => {
+  return (
+    <div className="ambient-bg" aria-hidden="true">
+      {/* 
+        The base background color is set via CSS (--color-bg: #050a24)
+        The layers below form the undulating waves using CSS border-radius rotation.
+      */}
+      <div className="wave-layer wave-1" />
+      <div className="wave-layer wave-2" />
+      <div className="wave-layer wave-3" />
 
-    {/* Film-grain noise overlay for texture */}
-    <div className="noise" />
-  </div>
-);
+      {/* Film-grain noise overlay for texture */}
+      <div className="noise" />
+    </div>
+  );
+};
 
 export default AmbientBackground;
