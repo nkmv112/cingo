@@ -216,10 +216,13 @@ const Dashboard = () => {
         <div className="right-panel">
           
           {/* New Quests Shortcut Card - MOVED TO TOP FOR MOBILE VISIBILITY */}
-          <div className="card slide-up-animation" style={{ 
-            animationDelay: '0.1s', 
+          <div className="card" style={{ 
+            marginBottom: '16px',
             backgroundColor: 'var(--color-surface)',
-            borderLeft: '4px solid var(--color-secondary)'
+            borderLeft: '4px solid var(--color-secondary)',
+            display: 'block',
+            visibility: 'visible',
+            opacity: 1
           }}>
             <h3 style={{ marginBottom: '16px', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Available Quests</h3>
             <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem', marginBottom: '16px' }}>Master challenges and earn special badges.</p>

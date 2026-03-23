@@ -82,7 +82,7 @@ const Sidebar = () => {
           <Home className="icon" />
           <span>Learn</span>
         </NavLink>
-        <NavLink to="/quests" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`} data-mobile-nav="quests">
+        <NavLink to="/quests" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
           <BookOpen className="icon" />
           <span>Quests</span>
         </NavLink>
