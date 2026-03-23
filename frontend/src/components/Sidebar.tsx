@@ -30,7 +30,7 @@ const Sidebar = () => {
             <GraduationCap size={24} color="var(--color-primary)" />
           </div>
           <div>
-            <h1 style={{ color: 'var(--color-text-main)', fontSize: '1.6rem', fontWeight: 500, letterSpacing: '0.2em', lineHeight: 1, textShadow: '0 0 10px rgba(255,255,255,0.3)' }}>CINGO</h1>
+            <h1 style={{ color: 'var(--color-text-main)', fontSize: '1.6rem', fontWeight: 900, letterSpacing: '0.2em', lineHeight: 1, textShadow: '0 0 10px rgba(255,255,255,0.4)', margin: 0 }}>CINGO V2</h1>
             <span style={{ fontSize: '0.65rem', color: 'var(--color-primary)', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Command Center</span>
           </div>
         </div>
