@@ -94,7 +94,8 @@ const AITutorConsole = () => {
 
   return (
     <div className="ai-tutor-container" style={{ 
-      display: 'flex', flexDirection: 'column', height: '500px', 
+      display: 'flex', flexDirection: 'column', 
+      height: window.innerWidth < 900 ? '400px' : '500px', 
       background: 'rgba(24, 24, 27, 0.8)', backdropFilter: 'blur(12px)',
       borderRadius: '20px', border: '1px solid rgba(63, 63, 70, 0.4)',
       overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.4)',

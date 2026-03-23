@@ -152,9 +152,9 @@ const QuestSolver = () => {
             </div>
             
             {/* Editor */}
-            <div style={{ flex: 1, backgroundColor: '#1e1e1e', minHeight: '400px' }}>
+            <div style={{ flex: 1, backgroundColor: '#1e1e1e', minHeight: isMobile ? '300px' : '400px' }}>
               <Editor
-                height="100%"
+                height={isMobile ? "300px" : "100%"}
                 defaultLanguage="c"
                 theme="vs-dark"
                 value={code}

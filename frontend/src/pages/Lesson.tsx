@@ -170,7 +170,7 @@ const Lesson = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: 'var(--color-bg)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', backgroundColor: 'var(--color-bg)' }}>
       
       {/* Header with Progress Bar and Lesson Title */}
       <div style={{ display: 'flex', alignItems: 'center', padding: isMobile ? '12px 16px' : '16px 48px', gap: isMobile ? '12px' : '24px', flexShrink: 0, borderBottom: '1px solid var(--color-border)' }}>
@@ -229,7 +229,7 @@ const Lesson = () => {
             {/* Interactive Code Column */}
             {currentSlide.hasCodeEditor && (
               <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                <div style={{ flex: '1', minHeight: '400px', borderRadius: '12px', overflow: 'hidden', border: '2px solid var(--color-border)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+                <div style={{ flex: '1', minHeight: isMobile ? '300px' : '400px', borderRadius: '12px', overflow: 'hidden', border: '2px solid var(--color-border)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
                   <div style={{ backgroundColor: '#1e1e1e', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #333' }}>
                      <span style={{ color: '#aaa', fontFamily: 'monospace', fontWeight: 'bold' }}>main.c</span>
                      <button 
@@ -241,7 +241,7 @@ const Lesson = () => {
                      </button>
                   </div>
                   <Editor
-                    height="calc(100% - 60px)"
+                    height={isMobile ? "250px" : "calc(100% - 60px)"}
                     language="c"
                     theme="vs-dark"
                     value={code}

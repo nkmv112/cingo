@@ -1,3 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 /* Layered Atmosphere Theme (4-Color Palette) - v1.0.2 */
@@ -449,7 +462,7 @@ h2 { font-size: 1.5rem; letter-spacing: 0.15em; }
   .main-content {
     margin-left: 0;
     width: 100vw;
-    padding: 20px 16px;
+    padding: 20px 12px;
     flex-direction: column !important; 
     align-items: center !important;
     gap: 24px;
@@ -531,7 +544,7 @@ h2 { font-size: 1.5rem; letter-spacing: 0.15em; }
     padding-bottom: 80px;
     width: 100vw;
   }
-  .card { padding: 20px 16px; }
-  h1 { font-size: 1.8rem; }
-  h2 { font-size: 1.3rem; }
+  .card { padding: 16px 12px; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.2rem; }
 }
