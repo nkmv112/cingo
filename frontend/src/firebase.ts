@@ -6,13 +6,15 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For this MVP, we leave these blank and expect the user to fill them in an .env file
 // Or provide a mock implementation if keys are missing to prevent crashing.
+const env = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env : {} as any;
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "mock_key",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "mock_domain",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "mock_project_id",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "mock_bucket",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "mock_sender",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "mock_app_id"
+  apiKey: env.VITE_FIREBASE_API_KEY || "mock_key",
+  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || "mock_domain",
+  projectId: env.VITE_FIREBASE_PROJECT_ID || "mock_project_id",
+  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET || "mock_bucket",
+  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID || "mock_sender",
+  appId: env.VITE_FIREBASE_APP_ID || "mock_app_id"
 };
 
 // Initialize Firebase only if we have a real key, otherwise mock to prevent crash during development
