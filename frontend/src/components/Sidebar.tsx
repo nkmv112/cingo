@@ -1,18 +1,10 @@
 import React from 'react';
-import { Home, BookOpen, User, Settings, Award, Sun, Moon, LogOut, Terminal, GraduationCap, ChevronRight, Shield } from 'lucide-react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useTheme } from '../theme/ThemeContext';
+import { Home, BookOpen, Settings, Award, Terminal, GraduationCap } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 
 const Sidebar = () => {
-  const { theme, toggleTheme } = useTheme();
-  const { logout, username } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const { username } = useAuth();
 
   return (
     <>
@@ -56,21 +48,16 @@ const Sidebar = () => {
           </NavLink>
 
           <div style={{ padding: '8px 20px', fontSize: '0.75rem', fontWeight: 800, color: 'var(--color-text-muted)', letterSpacing: '1px', marginTop: '24px', marginBottom: '4px' }}>
-            IDENTITY
+            COMMUNITY & ACCOUNT
           </div>
 
           <NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <Award className="icon" />
             <span>Leaderboard</span>
           </NavLink>
-          <NavLink to="/profile" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-             {/* Small hack: using User icon for profile, but let's make it look like the Identity dropdown in the mockup */}
-            <User className="icon" />
-            <span>{username || 'Profile'}</span>
-          </NavLink>
           <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <Settings className="icon" />
-            <span>Settings</span>
+            <span>Settings ({username || 'User'})</span>
           </NavLink>
         </nav>
 
@@ -94,9 +81,9 @@ const Sidebar = () => {
           <Award className="icon" />
           <span>Rank</span>
         </NavLink>
-        <NavLink to="/profile" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
-          <User className="icon" />
-          <span>Me</span>
+        <NavLink to="/settings" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+          <Settings className="icon" />
+          <span>Account</span>
         </NavLink>
       </div>
     </>

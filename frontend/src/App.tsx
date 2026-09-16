@@ -78,7 +78,7 @@ function App() {
           
           {/* Protected Placeholder Routes */}
           <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><ComingSoon title="User Profile" /></ProtectedRoute>} />
+          <Route path="/profile" element={<Navigate to="/settings" replace />} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/console" element={<ProtectedRoute><Console /></ProtectedRoute>} />
           
