@@ -15,7 +15,9 @@ import {
   ShieldCheck, 
   Edit3, 
   CheckCircle, 
-  AlertCircle 
+  AlertCircle,
+  Sparkles,
+  Lock
 } from 'lucide-react';
 import { useTheme } from '../theme/ThemeContext';
 import { useNavigate } from 'react-router-dom';
@@ -124,17 +126,40 @@ const Settings = () => {
           </div>
 
           {/* Profile Card */}
-          <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '32px' }}>
+          <div className="card" style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '24px', 
+            padding: '32px',
+            background: 'linear-gradient(135deg, rgba(22, 26, 88, 0.45) 0%, rgba(10, 14, 46, 0.6) 100%)',
+            border: '1.5px solid rgba(158, 159, 212, 0.3)',
+            borderRadius: '24px'
+          }}>
             <div style={{ 
               width: '80px', height: '80px', borderRadius: '50%', 
-              backgroundColor: 'var(--color-surface-hover)', border: '2px solid var(--color-primary)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+              backgroundColor: 'rgba(158, 159, 212, 0.15)', border: '2.5px solid var(--color-primary)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              boxShadow: '0 0 20px rgba(158, 159, 212, 0.25)'
             }}>
               <User size={40} color="var(--color-primary)" />
             </div>
             <div style={{ flex: 1 }}>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '4px' }}>{username}</h2>
-              <div style={{ display: 'flex', gap: '16px', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <h2 style={{ fontSize: '1.8rem', fontWeight: 800, margin: 0 }}>{username}</h2>
+                <span style={{ 
+                  fontSize: '0.72rem', 
+                  fontWeight: 700, 
+                  backgroundColor: 'rgba(16, 185, 129, 0.15)', 
+                  color: '#10b981', 
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  padding: '3px 8px', 
+                  borderRadius: '999px',
+                  letterSpacing: '0.5px'
+                }}>
+                  ACTIVE
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: '16px', color: 'var(--color-text-muted)', fontSize: '0.95rem', marginTop: '6px' }}>
                 <span><strong style={{ color: 'var(--color-text-main)' }}>{completedLessons.length}</strong> Lessons Completed</span>
                 <span>•</span>
                 <span><strong style={{ color: 'var(--color-text-main)' }}>{completedQuests.length}</strong> Quests Solved</span>
@@ -145,19 +170,25 @@ const Settings = () => {
               className="btn" 
               style={{ 
                 backgroundColor: 'rgba(239, 68, 68, 0.1)', 
-                color: 'var(--color-danger)', 
+                color: '#f87171', 
                 border: '1px solid rgba(239, 68, 68, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px'
+                gap: '8px',
+                padding: '10px 18px',
+                borderRadius: '12px',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
               }}
             >
-              <LogOut size={18} /> Logout
+              <LogOut size={16} /> Logout
             </button>
           </div>
 
           {/* Overall Progress */}
-          <div className="card" style={{ padding: '32px' }}>
+          <div className="card" style={{ padding: '32px', borderRadius: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '16px' }}>
               <div>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '4px' }}>Curriculum Mastery</h3>
@@ -182,147 +213,187 @@ const Settings = () => {
             </div>
           </div>
 
-          {/* User Area: Change Username & Password */}
-          <div className="card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid var(--color-border)', paddingBottom: '16px' }}>
-              <ShieldCheck size={24} color="var(--color-primary)" />
-              <h3 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0 }}>
-                Security & Account Credentials
-              </h3>
+          {/* User Area: Security & Credentials Card */}
+          <div className="card" style={{ 
+            padding: '36px', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '32px',
+            background: 'linear-gradient(135deg, rgba(22, 26, 88, 0.4) 0%, rgba(10, 14, 46, 0.75) 100%)',
+            borderRadius: '24px',
+            border: '1.5px solid rgba(158, 159, 212, 0.25)',
+            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid rgba(158, 159, 212, 0.2)', paddingBottom: '16px' }}>
+              <div style={{ 
+                padding: '8px', 
+                borderRadius: '10px', 
+                backgroundColor: 'rgba(158, 159, 212, 0.15)',
+                color: 'var(--color-primary)'
+              }}>
+                <ShieldCheck size={24} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0, letterSpacing: '0.5px' }}>
+                  Security & Account Credentials
+                </h3>
+                <span style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)' }}>
+                  Update your student handle and password credentials
+                </span>
+              </div>
             </div>
 
             {/* Change Username Form */}
-            <form onSubmit={handleUsernameSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '1.05rem' }}>
+            <form onSubmit={handleUsernameSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '1.05rem', color: '#e2e8f0' }}>
                 <Edit3 size={18} color="var(--color-primary)" />
                 <span>Change Username</span>
               </div>
+              
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <input 
                   type="text"
                   placeholder="Enter new username"
                   value={newUsername}
                   onChange={(e) => setNewUsername(e.target.value)}
-                  style={{
-                    flex: 1,
-                    minWidth: '220px',
-                    padding: '12px 16px',
-                    borderRadius: 'var(--radius-sm, 10px)',
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: 'var(--color-bg)',
-                    color: 'var(--color-text-main)',
-                    fontSize: '1rem',
-                    outline: 'none'
-                  }}
+                  className="modern-input"
+                  style={{ flex: 1, minWidth: '240px' }}
                 />
                 <button 
                   type="submit" 
-                  className="btn btn-primary"
                   disabled={!newUsername.trim() || newUsername.trim() === username}
-                  style={{ padding: '12px 20px', fontSize: '0.95rem', fontWeight: 700 }}
+                  style={{ 
+                    padding: '14px 24px', 
+                    fontSize: '0.92rem', 
+                    fontWeight: 800,
+                    letterSpacing: '0.5px',
+                    borderRadius: '12px',
+                    border: 'none',
+                    background: (!newUsername.trim() || newUsername.trim() === username) 
+                      ? 'rgba(255,255,255,0.08)' 
+                      : 'linear-gradient(135deg, #9e9fd4 0%, #6366f1 100%)',
+                    color: (!newUsername.trim() || newUsername.trim() === username) ? '#64748b' : '#050a24',
+                    cursor: (!newUsername.trim() || newUsername.trim() === username) ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.25s ease',
+                    boxShadow: (!newUsername.trim() || newUsername.trim() === username) ? 'none' : '0 4px 16px rgba(99, 102, 241, 0.35)'
+                  }}
                 >
-                  Update Username
+                  UPDATE USERNAME
                 </button>
               </div>
+
               {usernameMsg && (
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '10px',
                   fontSize: '0.9rem',
-                  color: usernameMsg.type === 'success' ? 'var(--color-success)' : 'var(--color-danger)',
+                  fontWeight: 600,
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  backgroundColor: usernameMsg.type === 'success' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+                  border: usernameMsg.type === 'success' ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)',
+                  color: usernameMsg.type === 'success' ? '#34d399' : '#f87171',
                   marginTop: '4px'
                 }}>
-                  {usernameMsg.type === 'success' ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
+                  {usernameMsg.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
                   <span>{usernameMsg.text}</span>
                 </div>
               )}
             </form>
 
-            <hr style={{ border: 'none', borderTop: '1px solid var(--color-border)', margin: '4px 0' }} />
+            <hr style={{ border: 'none', borderTop: '1px solid rgba(158, 159, 212, 0.15)', margin: '4px 0' }} />
 
             {/* Change Password Form */}
             <form onSubmit={handlePasswordSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '1.05rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '1.05rem', color: '#e2e8f0' }}>
                 <Key size={18} color="var(--color-secondary)" />
                 <span>Change Password</span>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <input 
-                  type="password"
-                  placeholder="Current password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    borderRadius: 'var(--radius-sm, 10px)',
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: 'var(--color-bg)',
-                    color: 'var(--color-text-main)',
-                    fontSize: '1rem',
-                    outline: 'none'
-                  }}
-                />
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Current Password
+                  </label>
+                  <input 
+                    type="password"
+                    placeholder="Enter your current password"
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    className="modern-input"
+                  />
+                </div>
 
-                <input 
-                  type="password"
-                  placeholder="New password (min 10 characters)"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    borderRadius: 'var(--radius-sm, 10px)',
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: 'var(--color-bg)',
-                    color: 'var(--color-text-main)',
-                    fontSize: '1rem',
-                    outline: 'none'
-                  }}
-                />
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    New Password
+                  </label>
+                  <input 
+                    type="password"
+                    placeholder="Create a strong password (min 10 characters)"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="modern-input"
+                  />
+                </div>
 
                 {/* Real-time Password Requirements Checklist */}
                 <PasswordRequirements password={newPassword} />
 
-                <input 
-                  type="password"
-                  placeholder="Confirm new password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    borderRadius: 'var(--radius-sm, 10px)',
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: 'var(--color-bg)',
-                    color: 'var(--color-text-main)',
-                    fontSize: '1rem',
-                    outline: 'none'
-                  }}
-                />
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Confirm New Password
+                  </label>
+                  <input 
+                    type="password"
+                    placeholder="Re-enter new password to confirm"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="modern-input"
+                  />
+                </div>
               </div>
 
               <button 
                 type="submit" 
-                className="btn btn-secondary"
                 disabled={!oldPassword || !newPassword || !confirmPassword}
-                style={{ padding: '14px 24px', fontSize: '1rem', fontWeight: 700, alignSelf: 'flex-start' }}
+                style={{ 
+                  marginTop: '8px',
+                  padding: '14px 28px', 
+                  fontSize: '0.95rem', 
+                  fontWeight: 800,
+                  letterSpacing: '0.5px',
+                  borderRadius: '12px',
+                  border: 'none',
+                  background: (!oldPassword || !newPassword || !confirmPassword) 
+                    ? 'rgba(255,255,255,0.08)' 
+                    : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: (!oldPassword || !newPassword || !confirmPassword) ? '#64748b' : '#ffffff',
+                  cursor: (!oldPassword || !newPassword || !confirmPassword) ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.25s ease',
+                  alignSelf: 'flex-start',
+                  boxShadow: (!oldPassword || !newPassword || !confirmPassword) ? 'none' : '0 4px 18px rgba(16, 185, 129, 0.35)'
+                }}
               >
-                Update Password
+                UPDATE PASSWORD
               </button>
 
               {passwordMsg && (
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '10px',
                   fontSize: '0.9rem',
-                  color: passwordMsg.type === 'success' ? 'var(--color-success)' : 'var(--color-danger)',
+                  fontWeight: 600,
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  backgroundColor: passwordMsg.type === 'success' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+                  border: passwordMsg.type === 'success' ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)',
+                  color: passwordMsg.type === 'success' ? '#34d399' : '#f87171',
                   marginTop: '4px'
                 }}>
-                  {passwordMsg.type === 'success' ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
+                  {passwordMsg.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
                   <span>{passwordMsg.text}</span>
                 </div>
               )}
@@ -330,7 +401,7 @@ const Settings = () => {
           </div>
 
           {/* Preferences */}
-          <div className="card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', borderRadius: '24px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 700, borderBottom: '1px solid var(--color-border)', paddingBottom: '16px', marginBottom: '8px' }}>
               Application Preferences
             </h3>
@@ -385,7 +456,7 @@ const Settings = () => {
           </div>
 
           {/* Danger Zone */}
-          <div className="card" style={{ padding: '32px', border: '1px solid rgba(239, 68, 68, 0.3)', backgroundColor: 'rgba(239, 68, 68, 0.02)' }}>
+          <div className="card" style={{ padding: '32px', border: '1px solid rgba(239, 68, 68, 0.3)', backgroundColor: 'rgba(239, 68, 68, 0.02)', borderRadius: '24px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-danger)', borderBottom: '1px solid rgba(239, 68, 68, 0.2)', paddingBottom: '16px', marginBottom: '16px' }}>
               Danger Zone
             </h3>
@@ -402,16 +473,16 @@ const Settings = () => {
                  <button 
                    onClick={() => setShowConfirmReset(true)} 
                    className="btn" 
-                   style={{ backgroundColor: 'transparent', border: '1px solid var(--color-danger)', color: 'var(--color-danger)' }}
+                   style={{ backgroundColor: 'transparent', border: '1px solid var(--color-danger)', color: 'var(--color-danger)', borderRadius: '10px' }}
                  >
                    Flush Data
                  </button>
               ) : (
                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                   <button onClick={handleReset} className="btn" style={{ backgroundColor: 'var(--color-danger)', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                   <button onClick={handleReset} className="btn" style={{ backgroundColor: 'var(--color-danger)', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '8px', borderRadius: '10px' }}>
                       <Trash2 size={16} /> Confirm Reset
                    </button>
-                   <button onClick={() => setShowConfirmReset(false)} className="btn btn-outline">
+                   <button onClick={() => setShowConfirmReset(false)} className="btn btn-outline" style={{ borderRadius: '10px' }}>
                       Cancel
                    </button>
                  </div>
