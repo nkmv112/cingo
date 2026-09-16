@@ -5,29 +5,29 @@ import { useProgress } from '../auth/ProgressContext';
 
 const assessmentQuestions = [
   {
-    question: "What is the correct way to declare an integer variable 'x' and assign it the value 10?",
-    options: ["int x = 10;", "x := 10", "var x = 10", "integer x = 10"],
-    answer: "int x = 10;"
+    question: "In C, what is the output of printf(\"%d\", sizeof('a')); on standard 32/64-bit systems?",
+    options: ["1 (char size)", "4 (promoted to int)", "2 (short size)", "Undefined"],
+    answer: "4 (promoted to int)"
   },
   {
-    question: "Which of the following is used to print a message in C?",
-    options: ["echo()", "console.log()", "printf()", "cout <<"],
-    answer: "printf()"
+    question: "If int arr[] = {10, 20, 30}; int *ptr = arr; what does *(ptr + 2) evaluate to?",
+    options: ["10", "20", "30", "Address of arr[2]"],
+    answer: "30"
   },
   {
-    question: "What does '&' represent in the context of a variable in C?",
-    options: ["The value of the variable", "The address of the variable", "Bitwise AND", "A pointer"],
-    answer: "The address of the variable"
+    question: "Which of the following expressions checks if an integer 'n' is a power of 2 using bitwise operators?",
+    options: ["(n & (n - 1)) == 0 && n > 0", "(n | (n - 1)) == 0", "(n ^ (n - 1)) == 1", "(n & ~n) == 0"],
+    answer: "(n & (n - 1)) == 0 && n > 0"
   },
   {
-    question: "Which loop is guaranteed to execute at least once?",
-    options: ["for", "while", "do-while", "None of these"],
-    answer: "do-while"
+    question: "Where is memory dynamically allocated with malloc() located in the C runtime memory layout?",
+    options: ["Stack Segment", "Heap Segment", "Data/BSS Segment", "Code/Text Segment"],
+    answer: "Heap Segment"
   },
   {
-    question: "What is the output of '5 / 2' in C (using integer division)?",
-    options: ["2.5", "2", "3", "0"],
-    answer: "2"
+    question: "What happens if a recursive function in C lacks a valid base case termination condition?",
+    options: ["Compilation error", "Stack Overflow runtime crash", "Infinite loop with zero memory usage", "Memory leak in Heap"],
+    answer: "Stack Overflow runtime crash"
   }
 ];
 
