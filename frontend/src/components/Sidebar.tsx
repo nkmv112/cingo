@@ -1,11 +1,8 @@
 import React from 'react';
 import { Home, BookOpen, Settings, Award, Terminal, GraduationCap } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
 
 const Sidebar = () => {
-  const { username } = useAuth();
-
   return (
     <>
       <div className="sidebar">
@@ -48,7 +45,7 @@ const Sidebar = () => {
           </NavLink>
 
           <div style={{ padding: '8px 20px', fontSize: '0.75rem', fontWeight: 800, color: 'var(--color-text-muted)', letterSpacing: '1px', marginTop: '24px', marginBottom: '4px' }}>
-            COMMUNITY & ACCOUNT
+            SYSTEM
           </div>
 
           <NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
@@ -57,7 +54,7 @@ const Sidebar = () => {
           </NavLink>
           <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <Settings className="icon" />
-            <span>Settings ({username || 'User'})</span>
+            <span>Settings</span>
           </NavLink>
         </nav>
 
@@ -83,7 +80,7 @@ const Sidebar = () => {
         </NavLink>
         <NavLink to="/settings" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
           <Settings className="icon" />
-          <span>Account</span>
+          <span>Settings</span>
         </NavLink>
       </div>
     </>
