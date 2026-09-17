@@ -7,34 +7,98 @@ interface CodePlaygroundProps {
   fullHeight?: boolean;
 }
 
+interface RemoteBackend {
+  name: string;
+  run: (code: string) => Promise<any>;
+}
+
+const remoteBackends: RemoteBackend[] = [
+  {
+    name: 'CodeCompiler (remote)',
+    run: async (code: string) => {
+      const res = await axios.post(
+        'https://codecompiler.forgesparse.com/api/run',
+        { language: 'c', version: '*', files: [{ name: 'main.c', content: code }], stdin: '' },
+        { timeout: 30000 }
+      );
+      return {
+        run: { stdout: res.data.stdout, stderr: res.data.stderr },
+        compile: res.data.error ? { stderr: res.data.stderr || res.data.error } : undefined,
+      };
+    },
+  },
+  {
+    name: 'Wandbox (remote)',
+    run: async (code: string) => {
+      const res = await axios.post(
+        'https://wandbox.org/api/compile.json',
+        { code, compiler: 'gcc-head', stdin: '', options: '' },
+        { timeout: 30000 }
+      );
+      return {
+        run: {
+          stdout: res.data.program_output,
+          stderr: res.data.program_error || res.data.program_message,
+        },
+        compile: res.data.compiler_error ? { stderr: res.data.compiler_error } : undefined,
+      };
+    },
+  },
+];
+
+const formatResult = (data: any) => {
+  if (data.run && data.run.stdout) {
+    return data.run.stdout;
+  }
+  if (data.run && data.run.stderr) {
+    return `Execution Error:\n${data.run.stderr}`;
+  }
+  if (data.compile && data.compile.stderr) {
+    return `Compilation Error:\n${data.compile.stderr}`;
+  }
+  return 'Program executed successfully with no output.';
+};
+
 const CodePlayground: React.FC<CodePlaygroundProps> = ({ fullHeight = false }) => {
   const [code, setCode] = useState('#include <stdio.h>\n\nint main() {\n    printf("Playground ready!\\n");\n    return 0;\n}');
   const [output, setOutput] = useState('');
   const [isCompiling, setIsCompiling] = useState(false);
+  const [usedRemote, setUsedRemote] = useState(false);
 
   const handleRunCode = async () => {
     setIsCompiling(true);
     setOutput('Compiling and running...');
-    try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-      const response = await axios.post(`${API_URL}/execute`, {
-        files: [{ name: 'main.c', content: code }]
-      });
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-      if (response.data.run && response.data.run.stdout) {
-        setOutput(response.data.run.stdout);
-      } else if (response.data.run && response.data.run.stderr) {
-        setOutput(`Execution Error:\n${response.data.run.stderr}`);
-      } else if (response.data.compile && response.data.compile.stderr) {
-        setOutput(`Compilation Error:\n${response.data.compile.stderr}`);
-      } else {
-        setOutput('Program executed successfully with no output.');
-      }
+    try {
+      const response = await axios.post(
+        `${API_URL}/execute`,
+        { files: [{ name: 'main.c', content: code }] },
+        { timeout: 15000 }
+      );
+      setUsedRemote(false);
+      setOutput(formatResult(response.data));
     } catch (err: any) {
+      let lastErrorMessage = err.message || 'Unknown error';
+
+      for (const backend of remoteBackends) {
+        try {
+          setOutput(`Local compiler unreachable — trying ${backend.name}...`);
+          const data = await backend.run(code);
+          setUsedRemote(true);
+          setOutput(formatResult(data));
+          return;
+        } catch (remoteErr: any) {
+          lastErrorMessage = remoteErr.message || lastErrorMessage;
+        }
+      }
+
       if (err.response && err.response.data && err.response.data.error) {
-         setOutput(`API Error:\n${err.response.data.error}`);
+        setUsedRemote(false);
+        setOutput(`API Error:\n${err.response.data.error}`);
       } else {
-         setOutput(`Request Failed: ${err.message}\nMake sure your local compiler backend is running.`);
+        setUsedRemote(false);
+        setOutput(`Request Failed: ${lastErrorMessage}\nCould not reach any compiler service.`);
       }
     } finally {
       setIsCompiling(false);
@@ -52,6 +116,15 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ fullHeight = false }) =
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-main)', fontWeight: 800 }}>
           <Terminal size={20} color="var(--color-primary)" />
           <span>Quick Console</span>
+          {usedRemote && (
+            <span style={{
+              fontSize: '0.7rem', fontWeight: 700, color: 'var(--color-warning)',
+              background: 'rgba(251, 191, 36, 0.15)', padding: '2px 8px',
+              borderRadius: '999px', border: '1px solid rgba(251, 191, 36, 0.4)'
+            }}>
+              REMOTE COMPILER
+            </span>
+          )}
         </div>
         <button 
           onClick={handleRunCode} 
